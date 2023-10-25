@@ -10,9 +10,12 @@ module.exports = {
     'airbnb',
     'airbnb-typescript',
     'airbnb/hooks',
+    'plugin:react/jsx-runtime',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
+    'prettier',
   ],
+  plugins: ['react-refresh', '@typescript-eslint', 'simple-import-sort'],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -20,8 +23,16 @@ module.exports = {
     sourceType: 'module',
     project: ['./tsconfig.json'],
   },
-  plugins: ['react-refresh', '@typescript-eslint'],
+  settings: {
+    'import/resolver': {
+      typescript: {},
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
+  },
   rules: {
+    'jsx-quotes': [ERROR, 'prefer-double'],
     'react-refresh/only-export-components': [WARN, { allowConstantExport: true }],
     'react/jsx-no-constructed-context-values': OFF,
     'react/jsx-props-no-spreading': [
@@ -38,5 +49,18 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-unused-vars': WARN,
+    'simple-import-sort/imports': [
+      ERROR,
+      {
+        groups: [
+          ['^react', '^@?\\w'],
+          ['^(@|components)(/.*|$)'],
+          ['^\\u0000'],
+          ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+          ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+          ['^.+\\.?(css)$'],
+        ],
+      },
+    ],
   },
-}
+};
