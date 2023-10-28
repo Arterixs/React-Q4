@@ -10,6 +10,16 @@
         "name": "typescript-plugin-css-modules"
       }
     ],
+    "baseUrl": "src",
+    "paths": {
+      "app/*": ["app/*"],
+      "assets/*": ["assets/*"],
+      "components/*": ["components/*"],
+      "service/*": ["service/*"],
+      "pages/*": ["pages/*"],
+      "types/*": ["types/*"],
+      "styles/*": ["styles/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",

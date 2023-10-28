@@ -1,0 +1,1 @@
+export const MainPage = () => <h2>1</h2>
