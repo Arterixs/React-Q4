@@ -18,7 +18,8 @@
       "service/*": ["service/*"],
       "pages/*": ["pages/*"],
       "types/*": ["types/*"],
-      "styles/*": ["styles/*"]
+      "styles/*": ["styles/*"],
+      "ui/*": ["ui/*"]
     },
 
     /* Bundler mode */
