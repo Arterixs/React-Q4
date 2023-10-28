@@ -1,0 +1,6 @@
+.section {
+  max-width: var(--main-width-page);
+  padding: var(--main-padding-page);
+  padding-top: 40px;
+  width: 100%;
+}

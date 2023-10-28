@@ -2,6 +2,8 @@ import { Component } from 'react';
 
 import { SearchPart } from 'components/search-part';
 
+import styles from './style.module.css';
+
 interface MainPageState {
   resultInputSearch: string;
 }
@@ -20,7 +22,7 @@ export class MainPage extends Component<unknown, MainPageState> {
 
   render() {
     return (
-      <section>
+      <section className={styles.section}>
         <SearchPart handleClick={this.handleSearch} />
       </section>
     );
