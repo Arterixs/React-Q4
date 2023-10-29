@@ -5,7 +5,7 @@ import { getPrevRequestFromLocal, setCurrentRequestInLocal } from 'service/local
 import { Planet } from 'types/interface/api';
 import { BaseLoader } from 'ui/base-loader';
 
-import { PlanetsList } from 'components/planets-list';
+import { CardList } from 'components/card-list';
 import { SearchPart } from 'components/search-part';
 
 import styles from './style.module.css';
@@ -14,6 +14,8 @@ interface MainPageState {
   resultInputSearch: string;
   planets: Planet[] | null;
   loading: boolean;
+  hasErrorRequest: boolean;
+  hasErrorHard: boolean;
 }
 
 export class MainPage extends Component<unknown, MainPageState> {
@@ -23,6 +25,8 @@ export class MainPage extends Component<unknown, MainPageState> {
       resultInputSearch: getPrevRequestFromLocal(),
       planets: null,
       loading: true,
+      hasErrorRequest: false,
+      hasErrorHard: false,
     };
 
     this.handleClickSearch = this.handleClickSearch.bind(this);
@@ -34,10 +38,16 @@ export class MainPage extends Component<unknown, MainPageState> {
       if (resultApi) {
         this.setState({ planets: resultApi.results, loading: false });
       } else {
-        throw new Error('Oops');
+        this.setState({ hasErrorRequest: true, loading: false });
       }
-    } catch (error) {
-      throw new Error('OOps');
+    } catch {
+      this.setState({ hasErrorHard: true, loading: false });
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.state.hasErrorHard) {
+      throw new Error('There was an error in the fetch request, function getPlanets');
     }
   }
 
@@ -45,11 +55,15 @@ export class MainPage extends Component<unknown, MainPageState> {
     const checkValue = prepareValueRequest(value);
     setCurrentRequestInLocal(checkValue);
     this.setState({ resultInputSearch: checkValue, loading: true });
-    const resultApi = await getPlanets(checkValue);
-    if (resultApi) {
-      this.setState({ planets: resultApi.results, loading: false });
-    } else {
-      throw new Error('Oops');
+    try {
+      const resultApi = await getPlanets(checkValue);
+      if (resultApi) {
+        this.setState({ planets: resultApi.results, hasErrorRequest: false, loading: false });
+      } else {
+        this.setState({ hasErrorRequest: true, loading: false });
+      }
+    } catch {
+      this.setState({ hasErrorHard: true, loading: false });
     }
   }
 
@@ -58,7 +72,7 @@ export class MainPage extends Component<unknown, MainPageState> {
       <section className={styles.section}>
         {this.state.loading && <BaseLoader />}
         <SearchPart handleClick={this.handleClickSearch} />
-        <PlanetsList planets={this.state.planets} />
+        <CardList planets={this.state.planets} hasError={this.state.hasErrorRequest} />
       </section>
     );
   }

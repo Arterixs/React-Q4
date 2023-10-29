@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { Planet } from 'types/interface/api';
 
 import { getArrayPlanetInfo } from './getArrayPlanetInfo';
@@ -13,13 +14,14 @@ interface CardProps {
 
 export const Card = ({ planet }: CardProps) => {
   const dataOfPlanet = getArrayPlanetInfo(planet);
+  const classes = clsx(styles['cell-info_left'], styles['cell-info']);
   return (
     <article className={styles.card}>
-      <h3>{planet.name}</h3>
+      <h3 className={styles.title}>{planet.name}</h3>
       <ul className={styles.list}>
         {dataOfPlanet.map((planetInfo) => (
           <li className={styles['list-item']} key={planetInfo[FIRST_ELEM]}>
-            <div className={styles['cell-info']}>
+            <div className={classes}>
               <span>{planetInfo[FIRST_ELEM]}</span>
             </div>
             <div className={styles['cell-info']}>
