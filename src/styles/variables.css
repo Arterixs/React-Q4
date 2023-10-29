@@ -13,6 +13,7 @@
   --main-width-page: 1280px;
 
   --main-padding-page: 0 40px;
+  --main-padding-page-tb: 40px 0;
 
   --btn-main-transition: all 0.3s ease;
 }

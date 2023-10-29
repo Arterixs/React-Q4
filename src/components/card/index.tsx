@@ -4,6 +4,9 @@ import { getArrayPlanetInfo } from './getArrayPlanetInfo';
 
 import styles from './style.module.css';
 
+const FIRST_ELEM = 0;
+const SECOND_ELEM = 1;
+
 interface CardProps {
   planet: Planet;
 }
@@ -15,12 +18,12 @@ export const Card = ({ planet }: CardProps) => {
       <h3>{planet.name}</h3>
       <ul className={styles.list}>
         {dataOfPlanet.map((planetInfo) => (
-          <li className={styles['list-item']} key={planetInfo[0]}>
+          <li className={styles['list-item']} key={planetInfo[FIRST_ELEM]}>
             <div className={styles['cell-info']}>
-              <span>{planetInfo[0]}</span>
+              <span>{planetInfo[FIRST_ELEM]}</span>
             </div>
             <div className={styles['cell-info']}>
-              <span>{planetInfo[1]}</span>
+              <span>{planetInfo[SECOND_ELEM]}</span>
             </div>
           </li>
         ))}
