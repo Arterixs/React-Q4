@@ -19,7 +19,7 @@
       "pages/*": ["pages/*"],
       "types/*": ["types/*"],
       "styles/*": ["styles/*"],
-      "ui/*": ["ui/*"]
+      "ui/*": ["ui/*"],
     },
 
     /* Bundler mode */
