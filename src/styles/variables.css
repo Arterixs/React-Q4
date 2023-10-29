@@ -1,11 +1,17 @@
 :root {
   --bg-header: #dcb79d;
   --bg-footer: #d5b86f;
-  --bg-main: #6b666e;
+  --bg-main: #c8c5cb;
   --bg-input-main: #dcb79d;
 
+  --shadow: #3636364d;
+
+  --loader-color: #d5b86f;
   --btn-search-color: #b33636;
   --btn-search-color-hover: #ce3e3e;
+  --btn-error-color: #000;
+  --btn-error-bg: #e01414;
+  --btn-error-hover: #ff0404;
   --white-color-text: #ead8d8;
 
   --border-input-main-color: #b33636;
@@ -16,4 +22,6 @@
   --main-padding-page-tb: 40px 0;
 
   --btn-main-transition: all 0.3s ease;
+
+  --index-loader: 5;
 }

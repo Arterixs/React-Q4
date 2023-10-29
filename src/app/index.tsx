@@ -1,3 +1,9 @@
-import {Layout} from 'components/layout'
+import { Layout } from 'components/layout';
 
-export const App = () => <Layout />
+import { ErrorBoundary } from './error-boundary';
+
+export const App = () => (
+  <ErrorBoundary>
+    <Layout />
+  </ErrorBoundary>
+);

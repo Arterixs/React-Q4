@@ -4,4 +4,5 @@ export const enum InputClasses {
 
 export const enum ButtonClasses {
   BTN_SEARCH = 'btn-search',
+  BTN_ERROR = 'btn-error',
 }

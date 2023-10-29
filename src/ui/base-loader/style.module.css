@@ -1,0 +1,93 @@
+.wrapper {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--shadow);
+  backdrop-filter: blur(10px);
+  z-index: var(--index-loader);
+}
+
+.hidden {
+  display: none;
+}
+
+@-webkit-keyframes rotating {
+  from {
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotating {
+  from {
+    -ms-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -ms-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.preloader {
+  margin: auto auto;
+  width: 70px;
+  height: 70px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 10px solid transparent;
+  border-top: 10px solid var(--loader-color);
+  border-left: 10px solid var(--loader-color);
+  border-bottom: 10px solid var(--loader-color);
+  -webkit-animation: rotating 2s linear infinite;
+  -moz-animation: rotating 2s linear infinite;
+  -ms-animation: rotating 2s linear infinite;
+  -o-animation: rotating 2s linear infinite;
+  animation: rotating 2s linear infinite;
+}
+
+.stop {
+  -webkit-animation: rotating 0s linear;
+  -moz-animation: rotating 0s linear;
+  -ms-animation: rotating 0s linear;
+  -o-animation: rotating 0s linear;
+  animation: rotating 0s linear;
+}
+
+@media (max-width: 768px) {
+  .preloader {
+    width: 44px;
+    height: 44px;
+    border: 7px solid transparent;
+    border-top: 7px solid var(--loader-color);
+    border-left: 7px solid var(--loader-color);
+    border-bottom: 7px solid var(--loader-color);
+  }
+}
+
+@media (max-width: 500px) {
+  .preloader {
+    width: 22px;
+    height: 22px;
+    border: 3px solid transparent;
+    border-top: 3px solid var(--loader-color);
+    border-left: 3px solid var(--loader-color);
+    border-bottom: 3px solid var(--loader-color);
+  }
+}

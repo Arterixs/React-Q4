@@ -36,7 +36,7 @@ module.exports = {
     'jsx-quotes': [ERROR, 'prefer-double'],
     'react-refresh/only-export-components': [WARN, { allowConstantExport: true }],
     'react/jsx-no-constructed-context-values': OFF,
-    "no-console": WARN,
+    "no-console": [WARN, { allow: ["error"] }],
     'react/jsx-props-no-spreading': [
       ERROR,
       {
