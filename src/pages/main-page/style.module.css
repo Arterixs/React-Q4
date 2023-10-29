@@ -1,0 +1,6 @@
+.section {
+  max-width: var(--main-width-page);
+  padding: var(--main-padding-page);
+  padding: var(--main-padding-page-tb);
+  width: 100%;
+}

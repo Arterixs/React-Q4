@@ -1,0 +1,10 @@
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+*config.ts
+**/dist
+*json
+*md
+*cjs
+.prettierrc
