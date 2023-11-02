@@ -16,15 +16,16 @@ export const MainPage = () => {
   const [errorRequest, setErrorRequest] = useState(false);
   const [errorHard, setErrorHard] = useState(false);
 
-  useEffect(() => {
-    requestPlanet(getPrevRequestFromLocal(), setPlanets, setLoading, setErrorRequest, setErrorHard);
-  }, []);
-
   if (errorHard) {
     throw new Error('There was an error in the fetch request, function getPlanets');
   }
 
+  useEffect(() => {
+    requestPlanet(getPrevRequestFromLocal(), setPlanets, setLoading, setErrorRequest, setErrorHard);
+  }, []);
+
   const handleClickSearch = (value: string) => {
+    setLoading(true);
     const checkValue = prepareValueRequest(value);
     setCurrentRequestInLocal(checkValue);
     requestPlanet(getPrevRequestFromLocal(), setPlanets, setLoading, setErrorRequest, setErrorHard);
