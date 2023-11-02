@@ -1,7 +1,7 @@
-import { Component } from 'react';
+import { useEffect, useState } from 'react';
 import { prepareValueRequest } from 'helpers/prepareValueRequest';
-import { getPlanets } from 'service/getPlanets';
 import { getPrevRequestFromLocal, setCurrentRequestInLocal } from 'service/localStorageApi';
+import { requestPlanet } from 'service/requestPlanet';
 import { Planet } from 'types/interface/api';
 import { BaseLoader } from 'ui/base-loader';
 
@@ -10,70 +10,31 @@ import { SearchPart } from 'components/search-part';
 
 import styles from './style.module.css';
 
-interface MainPageState {
-  resultInputSearch: string;
-  planets: Planet[] | null;
-  loading: boolean;
-  hasErrorRequest: boolean;
-  hasErrorHard: boolean;
-}
+export const MainPage = () => {
+  const [planets, setPlanets] = useState<Planet[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [errorRequest, setErrorRequest] = useState(false);
+  const [errorHard, setErrorHard] = useState(false);
 
-export class MainPage extends Component<unknown, MainPageState> {
-  constructor(props: unknown) {
-    super(props);
-    this.state = {
-      resultInputSearch: getPrevRequestFromLocal(),
-      planets: null,
-      loading: true,
-      hasErrorRequest: false,
-      hasErrorHard: false,
-    };
+  useEffect(() => {
+    requestPlanet(getPrevRequestFromLocal(), setPlanets, setLoading, setErrorRequest, setErrorHard);
+  }, []);
 
-    this.handleClickSearch = this.handleClickSearch.bind(this);
+  if (errorHard) {
+    throw new Error('There was an error in the fetch request, function getPlanets');
   }
 
-  async componentDidMount() {
-    try {
-      const resultApi = await getPlanets(this.state.resultInputSearch);
-      if (resultApi) {
-        this.setState({ planets: resultApi.results, loading: false });
-      } else {
-        this.setState({ hasErrorRequest: true, loading: false });
-      }
-    } catch {
-      this.setState({ hasErrorHard: true, loading: false });
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.state.hasErrorHard) {
-      throw new Error('There was an error in the fetch request, function getPlanets');
-    }
-  }
-
-  async handleClickSearch(value: string) {
+  const handleClickSearch = (value: string) => {
     const checkValue = prepareValueRequest(value);
     setCurrentRequestInLocal(checkValue);
-    this.setState({ resultInputSearch: checkValue, loading: true });
-    try {
-      const resultApi = await getPlanets(checkValue);
-      if (resultApi) {
-        this.setState({ planets: resultApi.results, hasErrorRequest: false, loading: false });
-      } else {
-        this.setState({ hasErrorRequest: true, loading: false });
-      }
-    } catch {
-      this.setState({ hasErrorHard: true, loading: false });
-    }
-  }
+    requestPlanet(getPrevRequestFromLocal(), setPlanets, setLoading, setErrorRequest, setErrorHard);
+  };
 
-  render() {
-    return (
-      <section className={styles.section}>
-        {this.state.loading && <BaseLoader />}
-        <SearchPart handleClick={this.handleClickSearch} />
-        <CardList planets={this.state.planets} hasError={this.state.hasErrorRequest} />
-      </section>
-    );
-  }
-}
+  return (
+    <section className={styles.section}>
+      {loading && <BaseLoader />}
+      <SearchPart handleClick={handleClickSearch} />
+      <CardList planets={planets} hasError={errorRequest} />
+    </section>
+  );
+};
