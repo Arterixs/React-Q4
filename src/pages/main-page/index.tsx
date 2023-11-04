@@ -90,13 +90,14 @@ export const MainPage = () => {
       amountElem
     );
   };
+  const isRenderPagination = errorRequest || amountPage === 1;
 
   return (
     <section className={styles.section}>
       {loading && <BaseLoader />}
       <SearchPart handleClick={handleClickSearch} handleClickOptions={handleClickOptions} amountPage={amountPage} />
       <CardList planets={planets} hasError={errorRequest} />
-      {!errorRequest && (
+      {!isRenderPagination && (
         <Pagination
           currentPage={pageParam ? Number(pageParam) : Number(DEFAULT_PAGE)}
           amountPage={amountPage}

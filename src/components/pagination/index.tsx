@@ -25,7 +25,7 @@ export const Pagination = (props: PaginationProps) => {
   const [isDisabledPrev, setDisabledPrev] = useState(props.currentPage - ONE_PAGE === MIN_PAGE);
 
   const handleClickMoveNext = () => {
-    if (currentPage + 1 > props.amountPage) {
+    if (currentPage + ONE_PAGE > props.amountPage) {
       setDisabledNext(true);
       return;
     }
