@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { prepareValueRequest } from 'helpers/prepareValueRequest';
 import { getPrevRequestFromLocal, setCurrentRequestInLocal } from 'service/localStorageApi';
 import { requestPlanet } from 'service/requestPlanet';
@@ -13,6 +13,8 @@ import styles from './style.module.css';
 
 export const MainPage = () => {
   const [planets, setPlanets] = useState<Planet[] | null>(null);
+  const [amountPage, setAmountPage] = useState(0);
+  const [amountElem, setAmountElem] = useState('10');
   const [loading, setLoading] = useState(true);
   const [errorRequest, setErrorRequest] = useState(false);
   const [errorHard, setErrorHard] = useState(false);
@@ -22,22 +24,51 @@ export const MainPage = () => {
   }
 
   useEffect(() => {
-    requestPlanet(getPrevRequestFromLocal(), setPlanets, setLoading, setErrorRequest, setErrorHard);
+    requestPlanet(getPrevRequestFromLocal(), setPlanets, setLoading, setErrorRequest, setErrorHard, setAmountPage);
   }, []);
 
   const handleClickSearch = (value: string) => {
     setLoading(true);
     const checkValue = prepareValueRequest(value);
     setCurrentRequestInLocal(checkValue);
-    requestPlanet(getPrevRequestFromLocal(), setPlanets, setLoading, setErrorRequest, setErrorHard);
+    requestPlanet(getPrevRequestFromLocal(), setPlanets, setLoading, setErrorRequest, setErrorHard, setAmountPage);
+  };
+
+  const handleClickOptions = (event: ChangeEvent<HTMLSelectElement>) => {
+    const currentElem = event.target.value;
+    setLoading(true);
+    requestPlanet(
+      getPrevRequestFromLocal(),
+      setPlanets,
+      setLoading,
+      setErrorRequest,
+      setErrorHard,
+      setAmountPage,
+      currentElem
+    );
+    setAmountElem(currentElem);
+  };
+
+  const clickPagination = (page: number) => {
+    setLoading(true);
+    requestPlanet(
+      getPrevRequestFromLocal(),
+      setPlanets,
+      setLoading,
+      setErrorRequest,
+      setErrorHard,
+      setAmountPage,
+      amountElem,
+      page
+    );
   };
 
   return (
     <section className={styles.section}>
       {loading && <BaseLoader />}
-      <SearchPart handleClick={handleClickSearch} />
+      <SearchPart handleClick={handleClickSearch} handleClickOptions={handleClickOptions} amountPage={amountPage} />
       <CardList planets={planets} hasError={errorRequest} />
-      <Pagination />
+      {!errorRequest && <Pagination amountPage={amountPage} clickPagination={clickPagination} />}
     </section>
   );
 };

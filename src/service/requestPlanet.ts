@@ -3,17 +3,24 @@ import { ReactState } from 'types/type';
 
 import { getPlanets } from './getPlanets';
 
+const DEFAULT_ELEM_ON_PAGE = 10;
+
 export const requestPlanet = async (
   value: string,
   setPlanet: ReactState<Planet[] | null>,
   setLoading: ReactState<boolean>,
   setErrorRequest: ReactState<boolean>,
-  setErrorHard: ReactState<boolean>
+  setErrorHard: ReactState<boolean>,
+  setAmountPage: ReactState<number>,
+  amountElem = '10',
+  page = 1
 ) => {
   try {
-    const resultApi = await getPlanets(value);
+    const resultApi = await getPlanets(value, page);
     if (resultApi) {
+      const amountPage = Math.ceil(resultApi.count / DEFAULT_ELEM_ON_PAGE);
       setPlanet(resultApi.results);
+      setAmountPage(amountPage);
     } else {
       setErrorRequest(true);
     }

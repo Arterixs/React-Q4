@@ -6,15 +6,20 @@ import { changeStateBtnNextAndPrev } from './changeStateBtnNextAndPrev';
 
 import styles from './style.module.css';
 
+interface PaginationProps {
+  amountPage: number;
+  clickPagination: (page: number) => void;
+}
+
 const ARRAY_AMOUNT_BTN = [1, 2, 3];
-const AMOUNT_PAGE = 6;
 const ONE_PAGE = 1;
+const FIRST_PAGE = 1;
 const THIRD_BTN_PAGINATION = 2;
 const FIRST_BTN_PAGINATION = 0;
 
-export const Pagination = () => {
+export const Pagination = (props: PaginationProps) => {
   const [btnPage, setBtnPage] = useState(ARRAY_AMOUNT_BTN);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(FIRST_PAGE);
   const [isDisabledNext, setDisabledNext] = useState(false);
   const [isDisabledPrev, setDisabledPrev] = useState(true);
 
@@ -24,7 +29,8 @@ export const Pagination = () => {
       setBtnPage(updateBtnPage);
     }
     setCurrentPage((current) => current + ONE_PAGE);
-    changeStateBtnNextAndPrev(currentPage + ONE_PAGE, setDisabledNext, setDisabledPrev, AMOUNT_PAGE);
+    changeStateBtnNextAndPrev(currentPage + ONE_PAGE, setDisabledNext, setDisabledPrev, props.amountPage);
+    props.clickPagination(currentPage + ONE_PAGE);
   };
 
   const handleClickMovePrev = () => {
@@ -33,12 +39,14 @@ export const Pagination = () => {
       setBtnPage(updateBtnPage);
     }
     setCurrentPage((current) => current - ONE_PAGE);
-    changeStateBtnNextAndPrev(currentPage - ONE_PAGE, setDisabledNext, setDisabledPrev, AMOUNT_PAGE);
+    changeStateBtnNextAndPrev(currentPage - ONE_PAGE, setDisabledNext, setDisabledPrev, props.amountPage);
+    props.clickPagination(currentPage - ONE_PAGE);
   };
 
   const handleClick = (num: number) => {
     setCurrentPage(num);
-    changeStateBtnNextAndPrev(num, setDisabledNext, setDisabledPrev, AMOUNT_PAGE);
+    changeStateBtnNextAndPrev(num, setDisabledNext, setDisabledPrev, props.amountPage);
+    props.clickPagination(num);
   };
 
   return (
@@ -52,7 +60,7 @@ export const Pagination = () => {
           currentPage === currentNumber
             ? [ButtonClasses.BTN_PAGINATION, ButtonClasses.BTN_PAGINATION_ACTIVE]
             : ButtonClasses.BTN_PAGINATION;
-        const isDisabled = currentNumber > AMOUNT_PAGE;
+        const isDisabled = currentNumber > props.amountPage;
         return (
           <BaseButton classBtn={classes} onClick={() => handleClick(currentNumber)} key={index} disabled={isDisabled}>
             <span>{number}</span>
