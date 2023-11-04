@@ -3,27 +3,32 @@ import { ButtonClasses } from 'types/enum/classes';
 import { BaseButton } from 'ui/base-button';
 
 import { changeStateBtnNextAndPrev } from './changeStateBtnNextAndPrev';
+import { getInitialBtn } from './getInitialBtn';
 
 import styles from './style.module.css';
 
 interface PaginationProps {
   amountPage: number;
+  currentPage: number;
   clickPagination: (page: number) => void;
 }
 
-const ARRAY_AMOUNT_BTN = [1, 2, 3];
 const ONE_PAGE = 1;
-const FIRST_PAGE = 1;
+const MIN_PAGE = 0;
 const THIRD_BTN_PAGINATION = 2;
 const FIRST_BTN_PAGINATION = 0;
 
 export const Pagination = (props: PaginationProps) => {
-  const [btnPage, setBtnPage] = useState(ARRAY_AMOUNT_BTN);
-  const [currentPage, setCurrentPage] = useState(FIRST_PAGE);
-  const [isDisabledNext, setDisabledNext] = useState(false);
-  const [isDisabledPrev, setDisabledPrev] = useState(true);
+  const [btnPage, setBtnPage] = useState(() => getInitialBtn(props.currentPage));
+  const [currentPage, setCurrentPage] = useState(props.currentPage);
+  const [isDisabledNext, setDisabledNext] = useState(props.currentPage + ONE_PAGE > props.amountPage);
+  const [isDisabledPrev, setDisabledPrev] = useState(props.currentPage - ONE_PAGE === MIN_PAGE);
 
   const handleClickMoveNext = () => {
+    if (currentPage + 1 > props.amountPage) {
+      setDisabledNext(true);
+      return;
+    }
     if (currentPage === btnPage[THIRD_BTN_PAGINATION]) {
       const updateBtnPage = btnPage.map((num) => num + ONE_PAGE);
       setBtnPage(updateBtnPage);

@@ -12,8 +12,9 @@ export const requestPlanet = async (
   setErrorRequest: ReactState<boolean>,
   setErrorHard: ReactState<boolean>,
   setAmountPage: ReactState<number>,
-  amountElem = '10',
-  page = 1
+  page = '',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _amountElem = '10'
 ) => {
   try {
     const resultApi = await getPlanets(value, page);
