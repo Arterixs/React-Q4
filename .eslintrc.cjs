@@ -33,6 +33,7 @@ module.exports = {
   },
   rules: {
     "react/destructuring-assignment": OFF,
+    "react/no-array-index-key": OFF,
     'jsx-quotes': [ERROR, 'prefer-double'],
     'react-refresh/only-export-components': [WARN, { allowConstantExport: true }],
     'react/jsx-no-constructed-context-values': OFF,

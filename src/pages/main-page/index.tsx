@@ -6,6 +6,7 @@ import { Planet } from 'types/interface/api';
 import { BaseLoader } from 'ui/base-loader';
 
 import { CardList } from 'components/card-list';
+import { Pagination } from 'components/pagination';
 import { SearchPart } from 'components/search-part';
 
 import styles from './style.module.css';
@@ -36,6 +37,7 @@ export const MainPage = () => {
       {loading && <BaseLoader />}
       <SearchPart handleClick={handleClickSearch} />
       <CardList planets={planets} hasError={errorRequest} />
+      <Pagination />
     </section>
   );
 };
