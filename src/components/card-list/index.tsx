@@ -7,11 +7,12 @@ import styles from './style.module.css';
 interface CardListProps {
   planets: Planet[] | null;
   hasError: boolean;
+  onClickCard: (url: string) => void;
 }
 
-export const CardList = ({ planets, hasError }: CardListProps) => (
+export const CardList = ({ planets, hasError, onClickCard }: CardListProps) => (
   <section className={styles.section}>
     <h2>Planets</h2>
-    {getJsxContentOfPlanets(planets, hasError)}
+    {getJsxContentOfPlanets(planets, hasError, onClickCard)}
   </section>
 );
