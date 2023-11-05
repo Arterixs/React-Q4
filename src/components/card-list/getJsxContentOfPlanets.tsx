@@ -16,7 +16,7 @@ export const getJsxContentOfPlanets = (planets: Planet[] | null, hasError: boole
         {planets.map((planet) => {
           const id = getIdCard(planet.url);
           return (
-            <NavLink to={`detail/${id}`} key={planet.name} onClick={clickCard} className={styles.link}>
+            <NavLink to={`${id}`} key={planet.name} onClick={clickCard} className={styles.link}>
               <Card planet={planet} />
             </NavLink>
           );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { redirect, useOutletContext, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams, useSearchParams } from 'react-router-dom';
 import { getUpdateParams } from 'service/getUpdateParams';
 import { getPrevRequestFromLocal } from 'service/localStorageApi';
 import { requestPlanetById } from 'service/requestPlanetById';
@@ -27,6 +27,7 @@ export const DetailPage = () => {
     useOutletContext<ContextType>();
   const [searchParams, setSearchParams] = useSearchParams();
   const [planet, setPlanet] = useState<Planet | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSearchParams({ ...getUpdateParams(currentPage, searchParam ?? getPrevRequestFromLocal()), detail: id! });
@@ -39,7 +40,7 @@ export const DetailPage = () => {
 
   const onCloseCard = () => {
     setShowDetail(false);
-    redirect('frontpage');
+    navigate('/frontpage');
   };
 
   const onStopPropagination = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
