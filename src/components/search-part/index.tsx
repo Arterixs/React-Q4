@@ -13,6 +13,7 @@ interface SearchPartProps {
   handleClick: (value: string) => void;
   handleClickOptions: (event: ChangeEvent<HTMLSelectElement>) => void;
   amountPage: number;
+  amountElem: string;
 }
 
 export const SearchPart = (props: SearchPartProps) => {
@@ -57,7 +58,12 @@ export const SearchPart = (props: SearchPartProps) => {
       <BaseButton classBtn={ButtonClasses.BTN_ERROR} onClick={handleErrorClick}>
         <span>Error</span>
       </BaseButton>
-      <select className={styles.select} onChange={props.handleClickOptions}>
+      <select
+        className={styles.select}
+        value={props.amountElem}
+        onChange={props.handleClickOptions}
+        disabled={Boolean(inputValue)}
+      >
         {amountCards.map((item) => (
           <option key={item} value={item}>
             {item}

@@ -14,15 +14,18 @@ import { SearchPart } from 'components/search-part';
 import styles from './style.module.css';
 
 const DEFAULT_PAGE = '1';
+const DEFAULT_ELEM_PAGE = '10';
+const MAX_PAGE_DEFAULT = 6;
 
 export const MainPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [planets, setPlanets] = useState<Planet[] | null>(null);
   const [amountPage, setAmountPage] = useState(0);
-  const [amountElem, setAmountElem] = useState('10');
+  const [amountPagPage, setAmountPagPage] = useState(MAX_PAGE_DEFAULT);
+  const [amountElem, setAmountElem] = useState(DEFAULT_ELEM_PAGE);
   const [loading, setLoading] = useState(true);
   const [errorRequest, setErrorRequest] = useState(false);
   const [errorHard, setErrorHard] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
   if (errorHard) {
     throw new Error('There was an error in the fetch request, function getPlanets');
   }
@@ -39,6 +42,7 @@ export const MainPage = () => {
       setErrorRequest,
       setErrorHard,
       setAmountPage,
+      setAmountPagPage,
       currentPage
     );
   }, []);
@@ -55,6 +59,7 @@ export const MainPage = () => {
       setErrorRequest,
       setErrorHard,
       setAmountPage,
+      setAmountPagPage,
       DEFAULT_PAGE
     );
   };
@@ -62,6 +67,7 @@ export const MainPage = () => {
   const handleClickOptions = (event: ChangeEvent<HTMLSelectElement>) => {
     const currentElem = event.target.value;
     const currentPage = pageParam ?? DEFAULT_PAGE;
+    setSearchParams(getUpdateParams(DEFAULT_PAGE, getPrevRequestFromLocal()));
     setLoading(true);
     requestPlanet(
       getPrevRequestFromLocal(),
@@ -70,7 +76,9 @@ export const MainPage = () => {
       setErrorRequest,
       setErrorHard,
       setAmountPage,
-      currentPage
+      setAmountPagPage,
+      currentPage,
+      currentElem
     );
     setAmountElem(currentElem);
   };
@@ -86,22 +94,29 @@ export const MainPage = () => {
       setErrorRequest,
       setErrorHard,
       setAmountPage,
+      setAmountPagPage,
       updateTypePage,
       amountElem
     );
   };
   const isRenderPagination = errorRequest || amountPage === 1;
-
+  const currentPage = pageParam ? Number(pageParam) : Number(DEFAULT_PAGE);
   return (
     <section className={styles.section}>
       {loading && <BaseLoader />}
-      <SearchPart handleClick={handleClickSearch} handleClickOptions={handleClickOptions} amountPage={amountPage} />
+      <SearchPart
+        handleClick={handleClickSearch}
+        handleClickOptions={handleClickOptions}
+        amountElem={amountElem}
+        amountPage={amountPage}
+      />
       <CardList planets={planets} hasError={errorRequest} />
       {!isRenderPagination && (
         <Pagination
-          currentPage={pageParam ? Number(pageParam) : Number(DEFAULT_PAGE)}
-          amountPage={amountPage}
+          currentPage={currentPage}
+          amountPage={amountPagPage}
           clickPagination={clickPagination}
+          key={currentPage}
         />
       )}
     </section>

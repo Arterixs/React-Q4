@@ -1,7 +1,7 @@
 import { Planet } from 'types/interface/api';
 import { ReactState } from 'types/type';
 
-import { getPlanets } from './getPlanets';
+import { getResultRequest } from './requestDefaultElem';
 
 const DEFAULT_ELEM_ON_PAGE = 10;
 
@@ -12,16 +12,19 @@ export const requestPlanet = async (
   setErrorRequest: ReactState<boolean>,
   setErrorHard: ReactState<boolean>,
   setAmountPage: ReactState<number>,
+  setAmountPagPage: ReactState<number>,
   page = '',
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _amountElem = '10'
+  amountElem = '10'
 ) => {
   try {
-    const resultApi = await getPlanets(value, page);
+    const numberAmountElem = Number(amountElem);
+    const resultApi = await getResultRequest(value, page, numberAmountElem);
     if (resultApi) {
-      const amountPage = Math.ceil(resultApi.count / DEFAULT_ELEM_ON_PAGE);
+      const amountPagPage = Math.ceil(resultApi.count / DEFAULT_ELEM_ON_PAGE);
+      const amountOptionsPage = Math.ceil(resultApi.finalCount / DEFAULT_ELEM_ON_PAGE);
       setPlanet(resultApi.results);
-      setAmountPage(amountPage);
+      setAmountPage(amountOptionsPage);
+      setAmountPagPage(amountPagPage);
     } else {
       setErrorRequest(true);
     }
