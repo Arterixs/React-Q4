@@ -1,3 +1,8 @@
+export interface PlanetRequest {
+  count: number;
+  results: Planet;
+}
+
 export interface PlanetsRequest {
   count: number;
   results: Planet[];
@@ -12,4 +17,5 @@ export interface Planet {
   gravity: string;
   terrain: string;
   population: string;
+  url: string;
 }

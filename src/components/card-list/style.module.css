@@ -29,3 +29,8 @@
   font-weight: 700;
   color: var(--message-color);
 }
+
+.link {
+  text-decoration: none;
+  color: var(--black);
+}

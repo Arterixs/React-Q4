@@ -15,6 +15,30 @@
   color: var(--white-color-text);
 }
 
+.btn-pagination {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--border-btn-pagination);
+  border-radius: 5px;
+  background-color: var(--bg-btn-pagination);
+}
+
+.btn-pagination:hover {
+  background-color: var(--bg-btn-pagination-hover);
+  transition: var(--btn-main-transition);
+}
+
+.btn-pagination_active {
+  background-color: var(--bg-btn-pagination-active);
+  transition: var(--btn-main-transition);
+}
+
+.btn-pagination:disabled {
+  background-color: var(--bg-btn-pagination-disabled);
+  transition: var(--btn-main-transition);
+  cursor: default;
+}
+
 .btn-error {
   width: 60px;
   height: 30px;

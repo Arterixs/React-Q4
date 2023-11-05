@@ -4,10 +4,15 @@
   --bg-main: #c8c5cb;
   --bg-input-main: #dcb79d;
   --bg-card: #a5a1a9;
+  --bg-btn-pagination: #b08c8c;
+  --bg-btn-pagination-hover: #fcc5c5;
+  --bg-btn-pagination-disabled: #ababab;
+  --bg-btn-pagination-active: #ec9c9c;
 
   --shadow: #3636364d;
   --black: #000;
 
+  --border-btn-pagination: #a834c3;
   --loader-color: #d5b86f;
   --btn-search-color: #b33636;
   --btn-search-color-hover: #ce3e3e;

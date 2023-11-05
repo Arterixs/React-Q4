@@ -1,79 +1,144 @@
-import { Component } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Outlet, useSearchParams } from 'react-router-dom';
 import { prepareValueRequest } from 'helpers/prepareValueRequest';
-import { getPlanets } from 'service/getPlanets';
+import { getUpdateParams } from 'service/getUpdateParams';
 import { getPrevRequestFromLocal, setCurrentRequestInLocal } from 'service/localStorageApi';
+import { requestPlanet } from 'service/requestPlanet';
 import { Planet } from 'types/interface/api';
 import { BaseLoader } from 'ui/base-loader';
 
 import { CardList } from 'components/card-list';
+import { Pagination } from 'components/pagination';
 import { SearchPart } from 'components/search-part';
 
 import styles from './style.module.css';
 
-interface MainPageState {
-  resultInputSearch: string;
-  planets: Planet[] | null;
-  loading: boolean;
-  hasErrorRequest: boolean;
-  hasErrorHard: boolean;
-}
+const DEFAULT_PAGE = '1';
+const DEFAULT_ELEM_PAGE = '10';
+const MAX_PAGE_DEFAULT = 6;
 
-export class MainPage extends Component<unknown, MainPageState> {
-  constructor(props: unknown) {
-    super(props);
-    this.state = {
-      resultInputSearch: getPrevRequestFromLocal(),
-      planets: null,
-      loading: true,
-      hasErrorRequest: false,
-      hasErrorHard: false,
-    };
+export const MainPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [planets, setPlanets] = useState<Planet[] | null>(null);
+  const [amountPage, setAmountPage] = useState(0);
+  const [amountPagPage, setAmountPagPage] = useState(MAX_PAGE_DEFAULT);
+  const [amountElem, setAmountElem] = useState(DEFAULT_ELEM_PAGE);
+  const [loading, setLoading] = useState(true);
+  const [errorRequest, setErrorRequest] = useState(false);
+  const [errorHard, setErrorHard] = useState(false);
+  const [isShowDetail, setShowDetail] = useState(false);
 
-    this.handleClickSearch = this.handleClickSearch.bind(this);
+  if (errorHard) {
+    throw new Error('There was an error in the fetch request, function getPlanets');
   }
+  const searchParam = searchParams.get('search');
+  const pageParam = searchParams.get('page');
 
-  async componentDidMount() {
-    try {
-      const resultApi = await getPlanets(this.state.resultInputSearch);
-      if (resultApi) {
-        this.setState({ planets: resultApi.results, loading: false });
-      } else {
-        this.setState({ hasErrorRequest: true, loading: false });
-      }
-    } catch {
-      this.setState({ hasErrorHard: true, loading: false });
-    }
-  }
+  useEffect(() => {
+    const currentPage = pageParam ?? DEFAULT_PAGE;
+    setSearchParams(getUpdateParams(currentPage, searchParam ?? getPrevRequestFromLocal()));
+    requestPlanet(
+      getPrevRequestFromLocal(),
+      setPlanets,
+      setLoading,
+      setErrorRequest,
+      setErrorHard,
+      setAmountPage,
+      setAmountPagPage,
+      currentPage
+    );
+  }, []);
 
-  componentDidUpdate() {
-    if (this.state.hasErrorHard) {
-      throw new Error('There was an error in the fetch request, function getPlanets');
-    }
-  }
-
-  async handleClickSearch(value: string) {
+  const handleClickSearch = (value: string) => {
+    setLoading(true);
     const checkValue = prepareValueRequest(value);
     setCurrentRequestInLocal(checkValue);
-    this.setState({ resultInputSearch: checkValue, loading: true });
-    try {
-      const resultApi = await getPlanets(checkValue);
-      if (resultApi) {
-        this.setState({ planets: resultApi.results, hasErrorRequest: false, loading: false });
-      } else {
-        this.setState({ hasErrorRequest: true, loading: false });
-      }
-    } catch {
-      this.setState({ hasErrorHard: true, loading: false });
-    }
-  }
-
-  render() {
-    return (
-      <section className={styles.section}>
-        {this.state.loading && <BaseLoader />}
-        <SearchPart handleClick={this.handleClickSearch} />
-        <CardList planets={this.state.planets} hasError={this.state.hasErrorRequest} />
-      </section>
+    setSearchParams(getUpdateParams(DEFAULT_PAGE, getPrevRequestFromLocal()));
+    requestPlanet(
+      getPrevRequestFromLocal(),
+      setPlanets,
+      setLoading,
+      setErrorRequest,
+      setErrorHard,
+      setAmountPage,
+      setAmountPagPage,
+      DEFAULT_PAGE
     );
-  }
-}
+  };
+
+  const handleClickOptions = (event: ChangeEvent<HTMLSelectElement>) => {
+    const currentElem = event.target.value;
+    const currentPage = pageParam ?? DEFAULT_PAGE;
+    setSearchParams(getUpdateParams(DEFAULT_PAGE, getPrevRequestFromLocal()));
+    setLoading(true);
+    requestPlanet(
+      getPrevRequestFromLocal(),
+      setPlanets,
+      setLoading,
+      setErrorRequest,
+      setErrorHard,
+      setAmountPage,
+      setAmountPagPage,
+      currentPage,
+      currentElem
+    );
+    setAmountElem(currentElem);
+  };
+
+  const clickPagination = (page: number) => {
+    const updateTypePage = String(page);
+    setSearchParams(getUpdateParams(updateTypePage, getPrevRequestFromLocal()));
+    setLoading(true);
+    requestPlanet(
+      getPrevRequestFromLocal(),
+      setPlanets,
+      setLoading,
+      setErrorRequest,
+      setErrorHard,
+      setAmountPage,
+      setAmountPagPage,
+      updateTypePage,
+      amountElem
+    );
+  };
+
+  const onShowDetail = () => {
+    setLoading(true);
+    setShowDetail(true);
+  };
+
+  const isRenderPagination = errorRequest || amountPage === 1;
+  const currentPage = pageParam ? Number(pageParam) : Number(DEFAULT_PAGE);
+  return (
+    <section className={styles.section}>
+      {loading && <BaseLoader />}
+      <SearchPart
+        handleClick={handleClickSearch}
+        handleClickOptions={handleClickOptions}
+        amountElem={amountElem}
+        amountPage={amountPage}
+      />
+      <CardList planets={planets} hasError={errorRequest} clickCard={onShowDetail} />
+      {!isRenderPagination && (
+        <Pagination
+          currentPage={currentPage}
+          amountPage={amountPagPage}
+          clickPagination={clickPagination}
+          key={currentPage}
+        />
+      )}
+      {isShowDetail && (
+        <Outlet
+          context={{
+            currentPage: pageParam ?? DEFAULT_PAGE,
+            searchParam,
+            setShowDetail,
+            setLoading,
+            setErrorRequest,
+            setErrorHard,
+          }}
+        />
+      )}
+    </section>
+  );
+};
