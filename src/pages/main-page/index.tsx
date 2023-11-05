@@ -1,20 +1,15 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useSearchParams } from 'react-router-dom';
+import { Outlet, useSearchParams } from 'react-router-dom';
 import { prepareValueRequest } from 'helpers/prepareValueRequest';
-import { DetailPage } from 'pages/detail-page';
 import { getUpdateParams } from 'service/getUpdateParams';
 import { getPrevRequestFromLocal, setCurrentRequestInLocal } from 'service/localStorageApi';
 import { requestPlanet } from 'service/requestPlanet';
-import { requestPlanetById } from 'service/requestPlanetById';
 import { Planet } from 'types/interface/api';
 import { BaseLoader } from 'ui/base-loader';
 
 import { CardList } from 'components/card-list';
 import { Pagination } from 'components/pagination';
 import { SearchPart } from 'components/search-part';
-
-import { getIdCard } from './getIdCard';
 
 import styles from './style.module.css';
 
@@ -25,14 +20,14 @@ const MAX_PAGE_DEFAULT = 6;
 export const MainPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [planets, setPlanets] = useState<Planet[] | null>(null);
-  const [planet, setPlanet] = useState<Planet | null>(null);
   const [amountPage, setAmountPage] = useState(0);
   const [amountPagPage, setAmountPagPage] = useState(MAX_PAGE_DEFAULT);
   const [amountElem, setAmountElem] = useState(DEFAULT_ELEM_PAGE);
   const [loading, setLoading] = useState(true);
   const [errorRequest, setErrorRequest] = useState(false);
   const [errorHard, setErrorHard] = useState(false);
-  const [isDetailPage, setDetailPage] = useState(false);
+  const [isShowDetail, setShowDetail] = useState(false);
+
   if (errorHard) {
     throw new Error('There was an error in the fetch request, function getPlanets');
   }
@@ -107,23 +102,9 @@ export const MainPage = () => {
     );
   };
 
-  const onClickCard = (url: string) => {
-    const currentPage = pageParam ?? DEFAULT_PAGE;
-    const id = getIdCard(url);
-    setSearchParams({ ...getUpdateParams(currentPage, searchParam ?? getPrevRequestFromLocal()), detail: id });
+  const onShowDetail = () => {
     setLoading(true);
-    setDetailPage(true);
-    requestPlanetById(url, setPlanet, setLoading, setErrorRequest, setErrorHard);
-  };
-
-  const onCloseCard = () => {
-    setDetailPage(false);
-    searchParams.delete('detail');
-    setSearchParams(searchParams);
-  };
-
-  const onCloseCardTest = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    event.stopPropagation();
+    setShowDetail(true);
   };
 
   const isRenderPagination = errorRequest || amountPage === 1;
@@ -137,7 +118,7 @@ export const MainPage = () => {
         amountElem={amountElem}
         amountPage={amountPage}
       />
-      <CardList planets={planets} hasError={errorRequest} onClickCard={onClickCard} />
+      <CardList planets={planets} hasError={errorRequest} clickCard={onShowDetail} />
       {!isRenderPagination && (
         <Pagination
           currentPage={currentPage}
@@ -146,8 +127,18 @@ export const MainPage = () => {
           key={currentPage}
         />
       )}
-      {isDetailPage &&
-        createPortal(<DetailPage planet={planet} onClose={onCloseCard} onCloseBtn={onCloseCardTest} />, document.body)}
+      {isShowDetail && (
+        <Outlet
+          context={{
+            currentPage: pageParam ?? DEFAULT_PAGE,
+            searchParam,
+            setShowDetail,
+            setLoading,
+            setErrorRequest,
+            setErrorHard,
+          }}
+        />
+      )}
     </section>
   );
 };

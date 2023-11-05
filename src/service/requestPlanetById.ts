@@ -4,14 +4,14 @@ import { ReactState } from 'types/type';
 import { getPlanetById } from './getPlanetById';
 
 export const requestPlanetById = async (
-  url: string,
+  id: string,
   setPlanet: ReactState<Planet | null>,
   setLoading: ReactState<boolean>,
   setErrorRequest: ReactState<boolean>,
   setErrorHard: ReactState<boolean>
 ) => {
   try {
-    const resultApi = await getPlanetById(url);
+    const resultApi = await getPlanetById(id);
     if (resultApi) {
       setPlanet(resultApi);
     } else {
