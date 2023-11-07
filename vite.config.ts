@@ -19,6 +19,7 @@ export default defineConfig({
       styles: '/src/styles',
       ui: '/src/ui',
       helpers: '/src/helpers',
+      storage: '/src/storage'
     },
   },
 });
