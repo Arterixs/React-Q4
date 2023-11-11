@@ -66,5 +66,20 @@ module.exports = {
         ],
       },
     ],
+    "import/no-extraneous-dependencies": [
+      ERROR,
+      {
+        "devDependencies": [
+            "**/setup-test.ts",
+            "test.{ts,tsx,js,jsx}",
+            "test-*.{ts,tsx,js,jsx}",
+            "**/*{.,_}{test,spec}.{ts,tsx,js,jsx}",
+            "**/jest.config.{ts,js}",
+            "**/jest.setup.{ts,js}",
+            "**/*.stories.*",
+            "**/.storybook/**/*.*"
+        ]
+      }
+    ]
   },
 };
