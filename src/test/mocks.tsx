@@ -46,6 +46,7 @@ export const MOCK_PLANETS = [
     diameter: '104653',
     climate: 'arid3',
     gravity: '1 standard3r3',
+    terrain: 'rezent23',
     population: '2000003',
     url: 'https://swapi.dev/api/planets/4/',
   },
