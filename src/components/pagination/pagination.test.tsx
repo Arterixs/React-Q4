@@ -5,7 +5,7 @@ import { App } from 'app/index';
 import { mockFetch } from 'test/mocks';
 import { afterAll, beforeEach, describe, expect, it, SpyInstance, vi } from 'vitest';
 
-describe('Pagination', () => {
+describe('Search', () => {
   let fetchSpy: SpyInstance<[input: RequestInfo, init?: RequestInit | undefined], Promise<Response>>;
 
   beforeEach(() => {

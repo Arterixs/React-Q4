@@ -52,7 +52,7 @@ export const SearchPart = (props: SearchPartProps) => {
         onKeyDown={handlePressEnter}
         value={searchValue}
       />
-      <BaseButton classBtn={ButtonClasses.BTN_SEARCH} onClick={handleClick}>
+      <BaseButton classBtn={ButtonClasses.BTN_SEARCH} onClick={handleClick} data-testid="search">
         <span>Search</span>
       </BaseButton>
       <BaseButton classBtn={ButtonClasses.BTN_ERROR} onClick={handleErrorClick}>
