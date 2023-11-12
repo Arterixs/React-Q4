@@ -8,7 +8,7 @@ import { mockFetch } from 'test/mocks';
 import { afterEach, beforeEach, describe, expect, it, SpyInstance, vi } from 'vitest';
 
 describe('Search', () => {
-  let fetchSpy: SpyInstance<[input: RequestInfo, init?: RequestInit | undefined], Promise<Response>>;
+  let fetchSpy: SpyInstance;
   const getItemSpy = vi.spyOn(Storage.prototype, 'getItem');
   const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
 

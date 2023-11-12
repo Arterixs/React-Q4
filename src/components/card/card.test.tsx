@@ -8,7 +8,7 @@ import { afterAll, afterEach, beforeEach, describe, expect, it, SpyInstance, vi 
 import { Card } from 'components/card';
 
 describe('Card', () => {
-  let fetchSpy: SpyInstance<[input: RequestInfo, init?: RequestInit | undefined], Promise<Response>>;
+  let fetchSpy: SpyInstance;
 
   beforeEach(() => {
     fetchSpy = vi.spyOn(window, 'fetch').mockImplementation(mockFetch);
@@ -85,7 +85,7 @@ describe('Card', () => {
 });
 
 describe('Detail card', () => {
-  let fetchSpy: SpyInstance<[input: RequestInfo, init?: RequestInit | undefined], Promise<Response>>;
+  let fetchSpy: SpyInstance;
 
   beforeEach(() => {
     fetchSpy = vi.spyOn(window, 'fetch').mockImplementation(mockTimeoutFetch);

@@ -2,6 +2,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import { DetailPage } from 'pages/detail-page';
 import { ContextCards, ContextDetail } from 'storage/api-context';
 import { Planet } from 'types/interface/api';
+import { RequestInfo } from 'undici-types';
 
 import { CardList } from 'components/card-list';
 
@@ -184,40 +185,40 @@ export const mockUrlAllPlanets = 'https://swapi.dev/api/planets/?page=1';
 
 export async function mockTimeoutFetch(url: RequestInfo) {
   if (url.toString().startsWith(mockUrlPlanet)) {
-    return new Promise((resolve) => {
+    return new Promise<Response>((resolve) => {
       setTimeout(() => {
         resolve({
           ok: true,
           status: 200,
           json: async () => ({ results: MOCK_PLANET }),
-        });
+        } as Response);
       }, 2000);
     });
   }
 
-  return new Promise((resolve) => {
+  return new Promise<Response>((resolve) => {
     setTimeout(() => {
       resolve({
         ok: true,
         status: 200,
         json: async () => ({ count: 60, results: MOCK_PLANETS }),
-      });
+      } as Response);
     }, 2000);
   });
 }
 
-export async function mockFetch(url: RequestInfo) {
+export async function mockFetch(url: RequestInfo): Promise<Response> {
   if (url.toString().startsWith(mockUrlPlanet)) {
     return Promise.resolve({
       ok: true,
       status: 200,
       json: async () => ({ results: MOCK_PLANET }),
-    });
+    } as Response);
   }
 
   return Promise.resolve({
     ok: true,
     status: 200,
     json: async () => ({ count: 60, results: MOCK_PLANETS }),
-  });
+  } as Response);
 }

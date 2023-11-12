@@ -10,7 +10,7 @@ import { Layout } from 'components/layout';
 import { NotFound } from '.';
 
 describe('Page 404', () => {
-  let fetchSpy: SpyInstance<[input: RequestInfo, init?: RequestInit | undefined], Promise<Response>>;
+  let fetchSpy: SpyInstance;
 
   beforeEach(() => {
     fetchSpy = vi.spyOn(window, 'fetch').mockImplementation(mockFetch);
