@@ -1,5 +1,5 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
-import { getPrevRequestFromLocal } from 'service/localStorageApi';
+import { useSearchContext } from 'storage/hooks';
 import { InputTypes } from 'types/enum/attributs';
 import { ButtonClasses, InputClasses } from 'types/enum/classes';
 import { BaseButton } from 'ui/base-button';
@@ -17,7 +17,7 @@ interface SearchPartProps {
 }
 
 export const SearchPart = (props: SearchPartProps) => {
-  const [inputValue, setInputValue] = useState(() => getPrevRequestFromLocal());
+  const { searchValue, updateSearchValue } = useSearchContext();
   const [testError, setTestError] = useState(false);
   const amountCards = getAmountCards(props.amountPage);
 
@@ -26,11 +26,11 @@ export const SearchPart = (props: SearchPartProps) => {
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    updateSearchValue(event.target.value);
   };
 
   const handleClick = () => {
-    props.handleClick(inputValue);
+    props.handleClick(searchValue);
   };
 
   const handleErrorClick = () => {
@@ -39,7 +39,7 @@ export const SearchPart = (props: SearchPartProps) => {
 
   const handlePressEnter = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      props.handleClick(inputValue);
+      props.handleClick(searchValue);
     }
   };
 
@@ -50,9 +50,9 @@ export const SearchPart = (props: SearchPartProps) => {
         type={InputTypes.TEXT}
         onChange={handleChange}
         onKeyDown={handlePressEnter}
-        value={inputValue}
+        value={searchValue}
       />
-      <BaseButton classBtn={ButtonClasses.BTN_SEARCH} onClick={handleClick}>
+      <BaseButton classBtn={ButtonClasses.BTN_SEARCH} onClick={handleClick} data-testid="search">
         <span>Search</span>
       </BaseButton>
       <BaseButton classBtn={ButtonClasses.BTN_ERROR} onClick={handleErrorClick}>
@@ -62,7 +62,7 @@ export const SearchPart = (props: SearchPartProps) => {
         className={styles.select}
         value={props.amountElem}
         onChange={props.handleClickOptions}
-        disabled={Boolean(inputValue)}
+        disabled={Boolean(searchValue)}
       >
         {amountCards.map((item) => (
           <option key={item} value={item}>

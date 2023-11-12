@@ -4,7 +4,8 @@ import { prepareValueRequest } from 'helpers/prepareValueRequest';
 import { getUpdateParams } from 'service/getUpdateParams';
 import { getPrevRequestFromLocal, setCurrentRequestInLocal } from 'service/localStorageApi';
 import { requestPlanet } from 'service/requestPlanet';
-import { Planet } from 'types/interface/api';
+import { useCardsContext } from 'storage/hooks';
+import { SearchContextWrapper } from 'storage/search-context';
 import { BaseLoader } from 'ui/base-loader';
 
 import { CardList } from 'components/card-list';
@@ -18,8 +19,8 @@ const DEFAULT_ELEM_PAGE = '10';
 const MAX_PAGE_DEFAULT = 6;
 
 export const MainPage = () => {
+  const { updatePlanets } = useCardsContext();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [planets, setPlanets] = useState<Planet[] | null>(null);
   const [amountPage, setAmountPage] = useState(0);
   const [amountPagPage, setAmountPagPage] = useState(MAX_PAGE_DEFAULT);
   const [amountElem, setAmountElem] = useState(DEFAULT_ELEM_PAGE);
@@ -39,7 +40,7 @@ export const MainPage = () => {
     setSearchParams(getUpdateParams(currentPage, searchParam ?? getPrevRequestFromLocal()));
     requestPlanet(
       getPrevRequestFromLocal(),
-      setPlanets,
+      updatePlanets,
       setLoading,
       setErrorRequest,
       setErrorHard,
@@ -56,7 +57,7 @@ export const MainPage = () => {
     setSearchParams(getUpdateParams(DEFAULT_PAGE, getPrevRequestFromLocal()));
     requestPlanet(
       getPrevRequestFromLocal(),
-      setPlanets,
+      updatePlanets,
       setLoading,
       setErrorRequest,
       setErrorHard,
@@ -73,7 +74,7 @@ export const MainPage = () => {
     setLoading(true);
     requestPlanet(
       getPrevRequestFromLocal(),
-      setPlanets,
+      updatePlanets,
       setLoading,
       setErrorRequest,
       setErrorHard,
@@ -91,7 +92,7 @@ export const MainPage = () => {
     setLoading(true);
     requestPlanet(
       getPrevRequestFromLocal(),
-      setPlanets,
+      updatePlanets,
       setLoading,
       setErrorRequest,
       setErrorHard,
@@ -109,16 +110,19 @@ export const MainPage = () => {
 
   const isRenderPagination = errorRequest || amountPage === 1;
   const currentPage = pageParam ? Number(pageParam) : Number(DEFAULT_PAGE);
+
   return (
     <section className={styles.section}>
       {loading && <BaseLoader />}
-      <SearchPart
-        handleClick={handleClickSearch}
-        handleClickOptions={handleClickOptions}
-        amountElem={amountElem}
-        amountPage={amountPage}
-      />
-      <CardList planets={planets} hasError={errorRequest} clickCard={onShowDetail} />
+      <SearchContextWrapper>
+        <SearchPart
+          handleClick={handleClickSearch}
+          handleClickOptions={handleClickOptions}
+          amountElem={amountElem}
+          amountPage={amountPage}
+        />
+      </SearchContextWrapper>
+      <CardList hasError={errorRequest} clickCard={onShowDetail} />
       {!isRenderPagination && (
         <Pagination
           currentPage={currentPage}

@@ -7,7 +7,7 @@ const DEFAULT_ELEM_ON_PAGE = 10;
 
 export const requestPlanet = async (
   value: string,
-  setPlanets: ReactState<Planet[] | null>,
+  setPlanets: (value: Planet[]) => void,
   setLoading: ReactState<boolean>,
   setErrorRequest: ReactState<boolean>,
   setErrorHard: ReactState<boolean>,

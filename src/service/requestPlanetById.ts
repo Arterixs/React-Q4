@@ -5,7 +5,7 @@ import { getPlanetById } from './getPlanetById';
 
 export const requestPlanetById = async (
   id: string,
-  setPlanet: ReactState<Planet | null>,
+  setPlanet: (value: Planet) => void,
   setLoading: ReactState<boolean>,
   setErrorRequest: ReactState<boolean>,
   setErrorHard: ReactState<boolean>

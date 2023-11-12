@@ -16,7 +16,7 @@ export const Card = ({ planet }: CardProps) => {
   const dataOfPlanet = getArrayPlanetInfo(planet);
   const classes = clsx(styles['cell-info_left'], styles['cell-info']);
   return (
-    <article className={styles.card}>
+    <article className={styles.card} data-testid="card">
       <h3 className={styles.title}>{planet.name}</h3>
       <ul className={styles.list}>
         {dataOfPlanet.map((planetInfo) => (

@@ -21,6 +21,8 @@
       "styles/*": ["styles/*"],
       "ui/*": ["ui/*"],
       "helpers/*": ["helpers/*"],
+      "storage/*": ["storage/*"],
+      "test/*": ["test/*"]
     },
 
     /* Bundler mode */
