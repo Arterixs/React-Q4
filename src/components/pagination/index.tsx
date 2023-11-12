@@ -56,7 +56,12 @@ export const Pagination = (props: PaginationProps) => {
 
   return (
     <section className={styles.pagination}>
-      <BaseButton classBtn={ButtonClasses.BTN_PAGINATION} onClick={handleClickMovePrev} disabled={isDisabledPrev}>
+      <BaseButton
+        classBtn={ButtonClasses.BTN_PAGINATION}
+        onClick={handleClickMovePrev}
+        disabled={isDisabledPrev}
+        data-testid="btn-prev"
+      >
         <span>{'<'}</span>
       </BaseButton>
       {btnPage.map((number, index, btns) => {
@@ -72,7 +77,12 @@ export const Pagination = (props: PaginationProps) => {
           </BaseButton>
         );
       })}
-      <BaseButton classBtn={ButtonClasses.BTN_PAGINATION} onClick={handleClickMoveNext} disabled={isDisabledNext}>
+      <BaseButton
+        classBtn={ButtonClasses.BTN_PAGINATION}
+        onClick={handleClickMoveNext}
+        disabled={isDisabledNext}
+        data-testid="btn-next"
+      >
         <span>{'>'}</span>
       </BaseButton>
     </section>
