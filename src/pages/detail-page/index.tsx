@@ -49,10 +49,16 @@ export const DetailPage = () => {
 
   return (
     <div className={styles.wrapper} onClick={onCloseCard} onKeyUp={() => {}} role="presentation">
-      <section className={styles.section} onClick={onStopPropagination} onKeyUp={() => {}} role="presentation">
+      <section
+        className={styles.section}
+        onClick={onStopPropagination}
+        onKeyUp={() => {}}
+        role="presentation"
+        data-testid={`details-${id}`}
+      >
         <div className={styles.div}>
           <h3>Details</h3>
-          <BaseButton onClick={onCloseCard} classBtn={ButtonClasses.BTN_ERROR}>
+          <BaseButton onClick={onCloseCard} classBtn={ButtonClasses.BTN_ERROR} data-testid="close">
             <span>Close</span>
           </BaseButton>
         </div>
