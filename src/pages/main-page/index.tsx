@@ -2,9 +2,12 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
 import { prepareValueRequest } from 'helpers/prepareValueRequest';
 import { getUpdateParams } from 'service/getUpdateParams';
-import { getPrevRequestFromLocal, setCurrentRequestInLocal } from 'service/localStorageApi';
+import { setCurrentRequestInLocal } from 'service/localStorageApi';
 import { requestPlanet } from 'service/requestPlanet';
 import { useCardsContext } from 'storage/hooks';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { amountElemPageSelector, searchValueRequestSelector } from 'store/selectors';
+import { updateAmount } from 'store/slice/amountElemPage';
 import { BaseLoader } from 'ui/base-loader';
 
 import { CardList } from 'components/card-list';
@@ -14,15 +17,16 @@ import { SearchPart } from 'components/search-part';
 import styles from './style.module.css';
 
 const DEFAULT_PAGE = '1';
-const DEFAULT_ELEM_PAGE = '10';
 const MAX_PAGE_DEFAULT = 6;
 
 export const MainPage = () => {
+  const dispatch = useAppDispatch();
   const { updatePlanets } = useCardsContext();
+  const requestValue = useAppSelector(searchValueRequestSelector);
+  const amountElem = useAppSelector(amountElemPageSelector);
   const [searchParams, setSearchParams] = useSearchParams();
   const [amountPage, setAmountPage] = useState(0);
   const [amountPagPage, setAmountPagPage] = useState(MAX_PAGE_DEFAULT);
-  const [amountElem, setAmountElem] = useState(DEFAULT_ELEM_PAGE);
   const [loading, setLoading] = useState(true);
   const [errorRequest, setErrorRequest] = useState(false);
   const [errorHard, setErrorHard] = useState(false);
@@ -36,9 +40,9 @@ export const MainPage = () => {
 
   useEffect(() => {
     const currentPage = pageParam ?? DEFAULT_PAGE;
-    setSearchParams(getUpdateParams(currentPage, searchParam ?? getPrevRequestFromLocal()));
+    setSearchParams(getUpdateParams(currentPage, searchParam ?? requestValue));
     requestPlanet(
-      getPrevRequestFromLocal(),
+      requestValue,
       updatePlanets,
       setLoading,
       setErrorRequest,
@@ -53,9 +57,9 @@ export const MainPage = () => {
     setLoading(true);
     const checkValue = prepareValueRequest(value);
     setCurrentRequestInLocal(checkValue);
-    setSearchParams(getUpdateParams(DEFAULT_PAGE, getPrevRequestFromLocal()));
+    setSearchParams(getUpdateParams(DEFAULT_PAGE, checkValue));
     requestPlanet(
-      getPrevRequestFromLocal(),
+      checkValue,
       updatePlanets,
       setLoading,
       setErrorRequest,
@@ -69,10 +73,10 @@ export const MainPage = () => {
   const handleClickOptions = (event: ChangeEvent<HTMLSelectElement>) => {
     const currentElem = event.target.value;
     const currentPage = pageParam ?? DEFAULT_PAGE;
-    setSearchParams(getUpdateParams(DEFAULT_PAGE, getPrevRequestFromLocal()));
+    setSearchParams(getUpdateParams(DEFAULT_PAGE, requestValue));
     setLoading(true);
     requestPlanet(
-      getPrevRequestFromLocal(),
+      requestValue,
       updatePlanets,
       setLoading,
       setErrorRequest,
@@ -82,15 +86,15 @@ export const MainPage = () => {
       currentPage,
       currentElem
     );
-    setAmountElem(currentElem);
+    dispatch(updateAmount(currentElem));
   };
 
   const clickPagination = (page: number) => {
     const updateTypePage = String(page);
-    setSearchParams(getUpdateParams(updateTypePage, getPrevRequestFromLocal()));
+    setSearchParams(getUpdateParams(updateTypePage, requestValue));
     setLoading(true);
     requestPlanet(
-      getPrevRequestFromLocal(),
+      requestValue,
       updatePlanets,
       setLoading,
       setErrorRequest,

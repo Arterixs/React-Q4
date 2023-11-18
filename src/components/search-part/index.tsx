@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { searchValueSelector } from 'store/selectors';
-import { setValue } from 'store/slice/search';
+import { setValue, setValueRequest } from 'store/slice/search';
 import { InputTypes } from 'types/enum/attributs';
 import { ButtonClasses, InputClasses } from 'types/enum/classes';
 import { BaseButton } from 'ui/base-button';
@@ -19,8 +19,8 @@ interface SearchPartProps {
 }
 
 export const SearchPart = (props: SearchPartProps) => {
-  const dispatch = useAppDispatch()
-  const searchValue = useAppSelector(searchValueSelector)
+  const dispatch = useAppDispatch();
+  const searchValue = useAppSelector(searchValueSelector);
   const [testError, setTestError] = useState(false);
   const amountCards = getAmountCards(props.amountPage);
 
@@ -29,10 +29,11 @@ export const SearchPart = (props: SearchPartProps) => {
   }
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    dispatch(setValue(event.target.value))
+    dispatch(setValue(event.target.value));
   };
 
   const handleClick = () => {
+    dispatch(setValueRequest(searchValue));
     props.handleClick(searchValue);
   };
 
@@ -42,6 +43,7 @@ export const SearchPart = (props: SearchPartProps) => {
 
   const handlePressEnter = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
+      dispatch(setValueRequest(searchValue));
       props.handleClick(searchValue);
     }
   };

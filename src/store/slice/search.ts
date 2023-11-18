@@ -1,17 +1,20 @@
-import { createSlice,PayloadAction } from '@reduxjs/toolkit'
-import { getPrevRequestFromLocal } from 'service/localStorageApi'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getPrevRequestFromLocal } from 'service/localStorageApi';
 
-const initialState = { searchValue: getPrevRequestFromLocal() } 
+const initialState = { value: getPrevRequestFromLocal(), valueRequest: getPrevRequestFromLocal() };
 
 export const searchSlice = createSlice({
   name: 'search',
   initialState,
   reducers: {
     setValue(state, action: PayloadAction<string>) {
-      state.searchValue = action.payload
+      state.value = action.payload;
+    },
+    setValueRequest(state, action: PayloadAction<string>) {
+      state.valueRequest = action.payload;
     },
   },
-})
+});
 
-export const { setValue } = searchSlice.actions
-export const searchSliceReducer = searchSlice.reducer
+export const { setValue, setValueRequest } = searchSlice.actions;
+export const searchSliceReducer = searchSlice.reducer;

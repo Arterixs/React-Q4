@@ -1,15 +1,17 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import { searchSliceReducer } from './slice/search'
+import { amountPlanetsSliceReducer } from './slice/amountElemPage';
+import { searchSliceReducer } from './slice/search';
 
 const rootReducer = combineReducers({
   search: searchSliceReducer,
-})
+  amountElemPage: amountPlanetsSliceReducer,
+});
 
 export const store = configureStore({
-  reducer: rootReducer
-})
+  reducer: rootReducer,
+});
 
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = ReturnType<typeof store.getState>;
 
-export type AppDispatch = typeof store.dispatch
+export type AppDispatch = typeof store.dispatch;
