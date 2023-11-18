@@ -6,10 +6,7 @@ import { ApiContextWrapper } from 'storage/api-context';
 
 import { Layout } from 'components/layout';
 
-import { ErrorBoundary } from './error-boundary';
-
 export const App = () => (
-  <ErrorBoundary>
     <Routes>
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Layout />}>
@@ -26,5 +23,4 @@ export const App = () => (
         </Route>
       </Route>
     </Routes>
-  </ErrorBoundary>
 );

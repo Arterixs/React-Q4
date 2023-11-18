@@ -20,7 +20,8 @@ export default defineConfig({
       ui: '/src/ui',
       helpers: '/src/helpers',
       storage: '/src/storage',
-      test: '/src/test'
+      test: '/src/test',
+      store: '/src/store'
     },
   },
   test: {
