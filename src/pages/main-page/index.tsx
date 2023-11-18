@@ -5,7 +5,6 @@ import { getUpdateParams } from 'service/getUpdateParams';
 import { getPrevRequestFromLocal, setCurrentRequestInLocal } from 'service/localStorageApi';
 import { requestPlanet } from 'service/requestPlanet';
 import { useCardsContext } from 'storage/hooks';
-import { SearchContextWrapper } from 'storage/search-context';
 import { BaseLoader } from 'ui/base-loader';
 
 import { CardList } from 'components/card-list';
@@ -114,14 +113,12 @@ export const MainPage = () => {
   return (
     <section className={styles.section}>
       {loading && <BaseLoader />}
-      <SearchContextWrapper>
-        <SearchPart
-          handleClick={handleClickSearch}
-          handleClickOptions={handleClickOptions}
-          amountElem={amountElem}
-          amountPage={amountPage}
-        />
-      </SearchContextWrapper>
+      <SearchPart
+        handleClick={handleClickSearch}
+        handleClickOptions={handleClickOptions}
+        amountElem={amountElem}
+        amountPage={amountPage}
+      />
       <CardList hasError={errorRequest} clickCard={onShowDetail} />
       {!isRenderPagination && (
         <Pagination

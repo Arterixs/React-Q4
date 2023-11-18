@@ -1,7 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+
+import { searchSliceReducer } from './slice/search'
+
+const rootReducer = combineReducers({
+  search: searchSliceReducer,
+})
 
 export const store = configureStore({
-  reducer: {},
+  reducer: rootReducer
 })
 
 export type RootState = ReturnType<typeof store.getState>
