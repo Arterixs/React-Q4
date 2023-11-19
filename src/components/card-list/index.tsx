@@ -12,7 +12,6 @@ interface CardListProps {
 
 export const CardList = ({ hasError, clickCard }: CardListProps) => {
   const planets = useAppSelector(planetsSelector);
-
   return (
     <section className={styles.section}>
       <h2>Planets</h2>

@@ -6,5 +6,3 @@ export const searchValueRequestSelector = (state: RootState) => state.search.val
 export const amountElemPageSelector = (state: RootState) => state.amountElemPage.amount;
 
 export const planetsSelector = (state: RootState) => state.planets.value;
-
-export const planetSelector = (state: RootState) => state.planet.value;

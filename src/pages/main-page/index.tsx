@@ -3,10 +3,12 @@ import { Outlet, useSearchParams } from 'react-router-dom';
 import { prepareValueRequest } from 'helpers/prepareValueRequest';
 import { getUpdateParams } from 'service/getUpdateParams';
 import { setCurrentRequestInLocal } from 'service/localStorageApi';
+import { useGetPlanetsQuery } from 'service/planetsApi';
 import { requestPlanet } from 'service/requestPlanet';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { amountElemPageSelector, searchValueRequestSelector } from 'store/selectors';
 import { updateAmount } from 'store/slice/amountElemPage';
+import { setPalnets, updateLoading } from 'store/slice/planets';
 import { BaseLoader } from 'ui/base-loader';
 
 import { CardList } from 'components/card-list';
@@ -17,69 +19,60 @@ import styles from './style.module.css';
 
 const DEFAULT_PAGE = '1';
 const MAX_PAGE_DEFAULT = 6;
+const DEFAULT_ELEM_ON_PAGE = 10;
 
 export const MainPage = () => {
   const dispatch = useAppDispatch();
+  const [searchParams, setSearchParams] = useSearchParams();
   const requestValue = useAppSelector(searchValueRequestSelector);
   const amountElem = useAppSelector(amountElemPageSelector);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [amountPage, setAmountPage] = useState(0);
+  const searchParam = searchParams.get('search') ?? requestValue;
+  const pageParam = searchParams.get('page') ?? DEFAULT_PAGE;
+  const [loading, setLoading] = useState(false);
   const [amountPagPage, setAmountPagPage] = useState(MAX_PAGE_DEFAULT);
-  const [loading, setLoading] = useState(true);
   const [errorRequest, setErrorRequest] = useState(false);
   const [errorHard, setErrorHard] = useState(false);
   const [isShowDetail, setShowDetail] = useState(false);
-
-  if (errorHard) {
-    throw new Error('There was an error in the fetch request, function getPlanets');
-  }
-  const searchParam = searchParams.get('search');
-  const pageParam = searchParams.get('page');
+  const { data, isError, isLoading, error, isFetching } = useGetPlanetsQuery({
+    namePlanet: searchParam,
+    page: pageParam,
+  });
 
   useEffect(() => {
-    const currentPage = pageParam ?? DEFAULT_PAGE;
-    setSearchParams(getUpdateParams(currentPage, searchParam ?? requestValue));
-    requestPlanet(
-      requestValue,
-      dispatch,
-      setLoading,
-      setErrorRequest,
-      setErrorHard,
-      setAmountPage,
-      setAmountPagPage,
-      currentPage
-    );
-  }, []);
+    if (data) {
+      dispatch(setPalnets(data.results));
+    }
+  }, [data]);
+
+  useEffect(() => {
+    dispatch(updateLoading(isLoading));
+  }, [isLoading]);
+
+  if (isError) {
+    setErrorRequest(true);
+  }
+
+  if (errorHard || error) {
+    throw new Error('There was an error in the fetch request, function getPlanets');
+  }
 
   const handleClickSearch = (value: string) => {
-    setLoading(true);
     const checkValue = prepareValueRequest(value);
     setCurrentRequestInLocal(checkValue);
     setSearchParams(getUpdateParams(DEFAULT_PAGE, checkValue));
-    requestPlanet(
-      checkValue,
-      dispatch,
-      setLoading,
-      setErrorRequest,
-      setErrorHard,
-      setAmountPage,
-      setAmountPagPage,
-      DEFAULT_PAGE
-    );
   };
 
   const handleClickOptions = (event: ChangeEvent<HTMLSelectElement>) => {
+    setLoading(true);
     const currentElem = event.target.value;
     const currentPage = pageParam ?? DEFAULT_PAGE;
     setSearchParams(getUpdateParams(DEFAULT_PAGE, requestValue));
-    setLoading(true);
     requestPlanet(
       requestValue,
       dispatch,
       setLoading,
       setErrorRequest,
       setErrorHard,
-      setAmountPage,
       setAmountPagPage,
       currentPage,
       currentElem
@@ -90,36 +83,27 @@ export const MainPage = () => {
   const clickPagination = (page: number) => {
     const updateTypePage = String(page);
     setSearchParams(getUpdateParams(updateTypePage, requestValue));
-    setLoading(true);
-    requestPlanet(
-      requestValue,
-      dispatch,
-      setLoading,
-      setErrorRequest,
-      setErrorHard,
-      setAmountPage,
-      setAmountPagPage,
-      updateTypePage,
-      amountElem
-    );
   };
 
   const onShowDetail = () => {
-    setLoading(true);
     setShowDetail(true);
   };
 
-  const isRenderPagination = errorRequest || amountPage === 1;
+  const amountPageData = data?.count ?? 0;
+
+  const amountOptionsPage = Math.ceil(amountPageData / DEFAULT_ELEM_ON_PAGE);
+
+  const isRenderPagination = errorRequest || amountOptionsPage === 1;
   const currentPage = pageParam ? Number(pageParam) : Number(DEFAULT_PAGE);
 
   return (
     <section className={styles.section}>
-      {loading && <BaseLoader />}
+      {(isLoading || isFetching || loading) && <BaseLoader />}
       <SearchPart
         handleClick={handleClickSearch}
         handleClickOptions={handleClickOptions}
         amountElem={amountElem}
-        amountPage={amountPage}
+        amountPage={amountOptionsPage}
       />
       <CardList hasError={errorRequest} clickCard={onShowDetail} />
       {!isRenderPagination && (
@@ -136,7 +120,6 @@ export const MainPage = () => {
             currentPage: pageParam ?? DEFAULT_PAGE,
             searchParam,
             setShowDetail,
-            setLoading,
             setErrorRequest,
             setErrorHard,
           }}

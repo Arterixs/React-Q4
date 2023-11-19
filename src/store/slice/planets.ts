@@ -3,9 +3,10 @@ import { Planet } from 'types/interface/api';
 
 interface PlanetsState {
   value: Planet[];
+  isLoading: boolean;
 }
 
-const initialState: PlanetsState = { value: [] };
+const initialState: PlanetsState = { value: [], isLoading: false };
 
 export const planetsSlice = createSlice({
   name: 'planets',
@@ -14,8 +15,11 @@ export const planetsSlice = createSlice({
     setPalnets(state, action: PayloadAction<Planet[]>) {
       state.value = action.payload;
     },
+    updateLoading(state, action: PayloadAction<boolean>) {
+      state.isLoading = action.payload;
+    },
   },
 });
 
-export const { setPalnets } = planetsSlice.actions;
+export const { setPalnets, updateLoading } = planetsSlice.actions;
 export const planetsSliceReducer = planetsSlice.reducer;

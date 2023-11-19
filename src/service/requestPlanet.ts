@@ -12,7 +12,6 @@ export const requestPlanet = async (
   setLoading: ReactState<boolean>,
   setErrorRequest: ReactState<boolean>,
   setErrorHard: ReactState<boolean>,
-  setAmountPage: ReactState<number>,
   setAmountPagPage: ReactState<number>,
   page = '',
   amountElem = '10'
@@ -22,9 +21,7 @@ export const requestPlanet = async (
     const resultApi = await getResultRequest(value, page, numberAmountElem);
     if (resultApi) {
       const amountPagPage = Math.ceil(resultApi.count / DEFAULT_ELEM_ON_PAGE);
-      const amountOptionsPage = Math.ceil(resultApi.finalCount / DEFAULT_ELEM_ON_PAGE);
       dispatch(setPalnets(resultApi.results));
-      setAmountPage(amountOptionsPage);
       setAmountPagPage(amountPagPage);
     } else {
       setErrorRequest(true);

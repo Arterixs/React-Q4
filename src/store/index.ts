@@ -1,4 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { planetApi } from 'service/planetApi';
+import { planetsApi } from 'service/planetsApi';
 
 import { amountElemPageSliceReducer } from './slice/amountElemPage';
 import { planetSliceReducer } from './slice/planet';
@@ -10,10 +12,13 @@ const rootReducer = combineReducers({
   amountElemPage: amountElemPageSliceReducer,
   planets: planetsSliceReducer,
   planet: planetSliceReducer,
+  [planetApi.reducerPath]: planetApi.reducer,
+  [planetsApi.reducerPath]: planetsApi.reducer,
 });
 
 export const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([planetApi.middleware, planetsApi.middleware]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

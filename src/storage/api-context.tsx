@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback,useState } from 'react';
+import { createContext, ReactNode, useCallback, useState } from 'react';
 import { Planet } from 'types/interface/api';
 
 interface ContextCardsState {
@@ -29,9 +29,7 @@ export const ApiContextWrapper = ({ children }: { children: ReactNode }) => {
 
   return (
     <ContextCards.Provider value={{ planets, updatePlanets }}>
-      <ContextDetail.Provider value={{ planet, updatePlanet }}>
-        {children}
-      </ContextDetail.Provider>
+      <ContextDetail.Provider value={{ planet, updatePlanet }}>{children}</ContextDetail.Provider>
     </ContextCards.Provider>
   );
 };
