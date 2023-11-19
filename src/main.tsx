@@ -12,10 +12,10 @@ import './index.css';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <HashRouter>
-    <ErrorBoundary>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <ErrorBoundary>
+        <Provider store={store}>
+          <App />
+        </Provider>
       </ErrorBoundary>
     </HashRouter>
   </React.StrictMode>

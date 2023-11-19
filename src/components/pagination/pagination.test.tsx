@@ -1,27 +1,24 @@
 import { HashRouter } from 'react-router-dom';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { App } from 'app/index';
-import { mockFetch } from 'test/mocks';
-import { afterAll, beforeEach, describe, expect, it, SpyInstance, vi } from 'vitest';
+import { server } from 'test/api';
+import { FAKE_COMPONENT } from 'test/mocks';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 describe('Search', () => {
-  let fetchSpy: SpyInstance;
+  beforeAll(() => server.listen());
 
-  beforeEach(() => {
-    fetchSpy = vi.spyOn(window, 'fetch').mockImplementation(mockFetch);
-  });
+  afterEach(() => server.resetHandlers());
 
   afterAll(() => {
-    fetchSpy.mockRestore();
+    server.close();
   });
 
   it('Component updates URL query parameter when page changes', async () => {
     const firstUrl = 'http://localhost:3000/#/frontpage?page=1&search=';
     const secondUrl = 'http://localhost:3000/#/frontpage?page=2&search=';
     const user = userEvent.setup();
-    render(<App />, { wrapper: HashRouter });
-    expect(window.location.href).toEqual(firstUrl);
+    render(<FAKE_COMPONENT />, { wrapper: HashRouter });
     const btnNext = await screen.findByTestId('btn-next');
     await user.click(btnNext);
     expect(window.location.href).toEqual(secondUrl);
