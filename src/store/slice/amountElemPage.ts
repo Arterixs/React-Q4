@@ -4,7 +4,7 @@ const DEFAULT_AMOUNT_PLANET = '10';
 
 const initialState = { amount: DEFAULT_AMOUNT_PLANET };
 
-export const amountPlanetsSlice = createSlice({
+export const amountElemPageSlice = createSlice({
   name: 'amountElemPage',
   initialState,
   reducers: {
@@ -14,5 +14,5 @@ export const amountPlanetsSlice = createSlice({
   },
 });
 
-export const { updateAmount } = amountPlanetsSlice.actions;
-export const amountPlanetsSliceReducer = amountPlanetsSlice.reducer;
+export const { updateAmount } = amountElemPageSlice.actions;
+export const amountElemPageSliceReducer = amountElemPageSlice.reducer;

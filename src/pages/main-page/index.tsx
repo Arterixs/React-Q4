@@ -4,7 +4,6 @@ import { prepareValueRequest } from 'helpers/prepareValueRequest';
 import { getUpdateParams } from 'service/getUpdateParams';
 import { setCurrentRequestInLocal } from 'service/localStorageApi';
 import { requestPlanet } from 'service/requestPlanet';
-import { useCardsContext } from 'storage/hooks';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { amountElemPageSelector, searchValueRequestSelector } from 'store/selectors';
 import { updateAmount } from 'store/slice/amountElemPage';
@@ -21,7 +20,6 @@ const MAX_PAGE_DEFAULT = 6;
 
 export const MainPage = () => {
   const dispatch = useAppDispatch();
-  const { updatePlanets } = useCardsContext();
   const requestValue = useAppSelector(searchValueRequestSelector);
   const amountElem = useAppSelector(amountElemPageSelector);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,7 +41,7 @@ export const MainPage = () => {
     setSearchParams(getUpdateParams(currentPage, searchParam ?? requestValue));
     requestPlanet(
       requestValue,
-      updatePlanets,
+      dispatch,
       setLoading,
       setErrorRequest,
       setErrorHard,
@@ -60,7 +58,7 @@ export const MainPage = () => {
     setSearchParams(getUpdateParams(DEFAULT_PAGE, checkValue));
     requestPlanet(
       checkValue,
-      updatePlanets,
+      dispatch,
       setLoading,
       setErrorRequest,
       setErrorHard,
@@ -77,7 +75,7 @@ export const MainPage = () => {
     setLoading(true);
     requestPlanet(
       requestValue,
-      updatePlanets,
+      dispatch,
       setLoading,
       setErrorRequest,
       setErrorHard,
@@ -95,7 +93,7 @@ export const MainPage = () => {
     setLoading(true);
     requestPlanet(
       requestValue,
-      updatePlanets,
+      dispatch,
       setLoading,
       setErrorRequest,
       setErrorHard,

@@ -3,7 +3,8 @@ import { useNavigate, useOutletContext, useParams, useSearchParams } from 'react
 import { getUpdateParams } from 'service/getUpdateParams';
 import { getPrevRequestFromLocal } from 'service/localStorageApi';
 import { requestPlanetById } from 'service/requestPlanetById';
-import { useDetailContext } from 'storage/hooks';
+import { useAppDispatch, useAppSelector } from 'store/hooks';
+import { planetSelector } from 'store/selectors';
 import { ButtonClasses } from 'types/enum/classes';
 import { ReactState } from 'types/type';
 import { BaseButton } from 'ui/base-button';
@@ -23,7 +24,9 @@ interface ContextType {
 
 export const DetailPage = () => {
   const { id } = useParams();
-  const { planet, updatePlanet } = useDetailContext();
+  const dispatch = useAppDispatch();
+  const planet = useAppSelector(planetSelector);
+
   const { currentPage, searchParam, setLoading, setErrorRequest, setShowDetail, setErrorHard } =
     useOutletContext<ContextType>();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,7 +34,7 @@ export const DetailPage = () => {
 
   useEffect(() => {
     setSearchParams({ ...getUpdateParams(currentPage, searchParam ?? getPrevRequestFromLocal()), detail: id! });
-    requestPlanetById(id!, updatePlanet, setLoading, setErrorRequest, setErrorHard);
+    requestPlanetById(id!, dispatch, setLoading, setErrorRequest, setErrorHard);
     return () => {
       searchParams.delete('detail');
       setSearchParams(searchParams);

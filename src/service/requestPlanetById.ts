@@ -1,11 +1,12 @@
-import { Planet } from 'types/interface/api';
+import { AppDispatch } from 'store/index';
+import { setPalnet } from 'store/slice/planet';
 import { ReactState } from 'types/type';
 
 import { getPlanetById } from './getPlanetById';
 
 export const requestPlanetById = async (
   id: string,
-  setPlanet: (value: Planet) => void,
+  dispatch: AppDispatch,
   setLoading: ReactState<boolean>,
   setErrorRequest: ReactState<boolean>,
   setErrorHard: ReactState<boolean>
@@ -13,7 +14,7 @@ export const requestPlanetById = async (
   try {
     const resultApi = await getPlanetById(id);
     if (resultApi) {
-      setPlanet(resultApi);
+      dispatch(setPalnet(resultApi));
     } else {
       setErrorRequest(true);
     }
