@@ -2,11 +2,13 @@ import { useEffect } from 'react';
 import { useNavigate, useOutletContext, useParams, useSearchParams } from 'react-router-dom';
 import { getUpdateParams } from 'service/getUpdateParams';
 import { getPrevRequestFromLocal } from 'service/localStorageApi';
-import { requestPlanetById } from 'service/requestPlanetById';
-import { useDetailContext } from 'storage/hooks';
+import { useGetPlanetByIdQuery } from 'service/planetApi';
+import { useAppDispatch } from 'store/hooks';
+import { setPlanet, updatePlanetLoading } from 'store/slice/planet';
 import { ButtonClasses } from 'types/enum/classes';
 import { ReactState } from 'types/type';
 import { BaseButton } from 'ui/base-button';
+import { BaseLoader } from 'ui/base-loader';
 
 import { Card } from 'components/card';
 
@@ -22,16 +24,34 @@ interface ContextType {
 }
 
 export const DetailPage = () => {
+  const dispatch = useAppDispatch();
+  const { currentPage, searchParam, setErrorRequest, setShowDetail, setErrorHard } = useOutletContext<ContextType>();
   const { id } = useParams();
-  const { planet, updatePlanet } = useDetailContext();
-  const { currentPage, searchParam, setLoading, setErrorRequest, setShowDetail, setErrorHard } =
-    useOutletContext<ContextType>();
+  const { data, isLoading, isError, isFetching, error } = useGetPlanetByIdQuery(id!);
+
+  if (isError) {
+    setErrorRequest(isError);
+  }
+
+  if (error) {
+    setErrorHard(true);
+  }
+
+  useEffect(() => {
+    dispatch(updatePlanetLoading(isLoading));
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setPlanet(data));
+    }
+  }, [data]);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     setSearchParams({ ...getUpdateParams(currentPage, searchParam ?? getPrevRequestFromLocal()), detail: id! });
-    requestPlanetById(id!, updatePlanet, setLoading, setErrorRequest, setErrorHard);
     return () => {
       searchParams.delete('detail');
       setSearchParams(searchParams);
@@ -48,22 +68,25 @@ export const DetailPage = () => {
   };
 
   return (
-    <div className={styles.wrapper} onClick={onCloseCard} onKeyUp={() => {}} role="presentation">
-      <section
-        className={styles.section}
-        onClick={onStopPropagination}
-        onKeyUp={() => {}}
-        role="presentation"
-        data-testid={`details-${id}`}
-      >
-        <div className={styles.div}>
-          <h3>Details</h3>
-          <BaseButton onClick={onCloseCard} classBtn={ButtonClasses.BTN_ERROR} data-testid="close">
-            <span>Close</span>
-          </BaseButton>
-        </div>
-        {planet && <Card planet={planet} />}
-      </section>
-    </div>
+    <>
+      {(isLoading || isFetching) && <BaseLoader />}
+      <div className={styles.wrapper} onClick={onCloseCard} onKeyUp={() => {}} role="presentation">
+        <section
+          className={styles.section}
+          onClick={onStopPropagination}
+          onKeyUp={() => {}}
+          role="presentation"
+          data-testid={`details-${id}`}
+        >
+          <div className={styles.div}>
+            <h3>Details</h3>
+            <BaseButton onClick={onCloseCard} classBtn={ButtonClasses.BTN_ERROR} data-testid="close">
+              <span>Close</span>
+            </BaseButton>
+          </div>
+          {data && <Card planet={data} />}
+        </section>
+      </div>
+    </>
   );
 };

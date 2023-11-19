@@ -1,7 +1,8 @@
+import { Provider } from 'react-redux';
 import { HashRouter, Route, Routes } from 'react-router-dom';
+import { App } from 'app/index';
 import { DetailPage } from 'pages/detail-page';
-import { ContextCards, ContextDetail } from 'storage/api-context';
-import { Planet } from 'types/interface/api';
+import { store } from 'store/index';
 import { RequestInfo } from 'undici-types';
 
 import { CardList } from 'components/card-list';
@@ -131,56 +132,22 @@ export const MOCK_PLANET = {
   url: 'https://swapi.dev/api/planets/1/',
 };
 
-interface FakeComponentProps {
-  planets: Planet[];
-}
+export const FAKE_COMPONENT = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
 
-export const FAKE_COMPONENT = (props: FakeComponentProps) => {
-  const mockFunction = () => {};
-  return (
-    <HashRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ContextCards.Provider value={{ planets: props.planets, updatePlanets: mockFunction }}>
-              <CardList clickCard={() => {}} hasError={false} />
-            </ContextCards.Provider>
-          }
-        />
-        <Route path=":id" element={<DetailPage />} />
-      </Routes>
-    </HashRouter>
-  );
-};
+export const FAKE_FULL_COMPONENT = () => (
+  <HashRouter>
+    <Routes>
+      <Route path="/" element={<CardList clickCard={() => {}} hasError={false} />} />
+      <Route path=":id" element={<DetailPage />} />
+    </Routes>
+  </HashRouter>
+);
 
-interface FakeFullComponentProps {
-  planets: Planet[];
-  planet: Planet;
-}
-
-export const FAKE_FULL_COMPONENT = (props: FakeFullComponentProps) => {
-  const mockFunction = () => {};
-  return (
-    <HashRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <ContextCards.Provider value={{ planets: props.planets, updatePlanets: mockFunction }}>
-              <ContextDetail.Provider value={{ planet: props.planet, updatePlanet: mockFunction }}>
-                <CardList clickCard={() => {}} hasError={false} />
-              </ContextDetail.Provider>
-            </ContextCards.Provider>
-          }
-        />
-        <Route path=":id" element={<DetailPage />} />
-      </Routes>
-    </HashRouter>
-  );
-};
-
-export const mockUrlPlanet = 'https://swapi.dev/api/planets/1/';
+export const mockUrlPlanet = 'https://swapi.dev/api/planets/1';
 export const mockUrlAllPlanets = 'https://swapi.dev/api/planets/?page=1';
 
 export async function mockTimeoutFetch(url: RequestInfo) {

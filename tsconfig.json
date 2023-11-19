@@ -13,7 +13,6 @@
     "baseUrl": "src",
     "paths": {
       "app/*": ["app/*"],
-      "assets/*": ["assets/*"],
       "components/*": ["components/*"],
       "service/*": ["service/*"],
       "pages/*": ["pages/*"],
@@ -22,7 +21,8 @@
       "ui/*": ["ui/*"],
       "helpers/*": ["helpers/*"],
       "storage/*": ["storage/*"],
-      "test/*": ["test/*"]
+      "test/*": ["test/*"],
+      "store/*": ["store/*"]
     },
 
     /* Bundler mode */

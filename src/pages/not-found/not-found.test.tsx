@@ -1,23 +1,20 @@
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MainPage } from 'pages/main-page';
-import { ApiContextWrapper } from 'storage/api-context';
-import { mockFetch } from 'test/mocks';
-import { afterEach, beforeEach, describe, expect, it, SpyInstance, vi } from 'vitest';
+import { server } from 'test/api';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
 import { Layout } from 'components/layout';
 
 import { NotFound } from '.';
 
 describe('Page 404', () => {
-  let fetchSpy: SpyInstance;
+  beforeAll(() => server.listen());
 
-  beforeEach(() => {
-    fetchSpy = vi.spyOn(window, 'fetch').mockImplementation(mockFetch);
-  });
+  afterEach(() => server.resetHandlers());
 
-  afterEach(() => {
-    fetchSpy.mockRestore();
+  afterAll(() => {
+    server.close();
   });
 
   it('404 page is displayed when navigating to an invalid route', async () => {
@@ -29,11 +26,7 @@ describe('Page 404', () => {
       },
       {
         path: '/frontpage',
-        element: (
-          <ApiContextWrapper>
-            <MainPage />
-          </ApiContextWrapper>
-        ),
+        element: <MainPage />,
       },
       {
         path: '*',

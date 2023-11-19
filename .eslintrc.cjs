@@ -32,6 +32,7 @@ module.exports = {
     },
   },
   rules: {
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
     "react/destructuring-assignment": OFF,
     "react-hooks/exhaustive-deps": OFF,
     "react/no-array-index-key": OFF,

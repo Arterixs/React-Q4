@@ -1,4 +1,5 @@
-import { useCardsContext } from 'storage/hooks';
+import { useAppSelector } from 'store/hooks';
+import { planetsSelector } from 'store/selectors';
 
 import { getJsxContentOfPlanets } from './getJsxContentOfPlanets';
 
@@ -10,8 +11,7 @@ interface CardListProps {
 }
 
 export const CardList = ({ hasError, clickCard }: CardListProps) => {
-  const { planets } = useCardsContext();
-
+  const planets = useAppSelector(planetsSelector);
   return (
     <section className={styles.section}>
       <h2>Planets</h2>

@@ -11,7 +11,6 @@ export default defineConfig({
   resolve: {
     alias: {
       app: '/src/app',
-      assets: '/src/assets',
       components: '/src/components',
       service: '/src/service',
       pages: '/src/pages',
@@ -20,7 +19,8 @@ export default defineConfig({
       ui: '/src/ui',
       helpers: '/src/helpers',
       storage: '/src/storage',
-      test: '/src/test'
+      test: '/src/test',
+      store: '/src/store'
     },
   },
   test: {
