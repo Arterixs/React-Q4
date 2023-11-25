@@ -13,6 +13,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:@next/next/recommended',
     'prettier',
   ],
   plugins: ['react-refresh', '@typescript-eslint', 'simple-import-sort'],
