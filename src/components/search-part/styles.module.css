@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.select {
+  height: 30px;
+  background: bisque;
+  cursor: pointer;
+}
