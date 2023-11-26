@@ -12,11 +12,11 @@ interface QueryGetPlanets {
 export const planetsApi = createApi({
   reducerPath: 'planetsApi',
   baseQuery: fetchBaseQuery({ baseUrl: API }),
-  // eslint-disable-next-line consistent-return
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
     }
+    return undefined;
   },
   endpoints: (builder) => ({
     getPlanets: builder.query<PlanetsRequest, QueryGetPlanets>({

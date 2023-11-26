@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactNode, useState } from 'react';
+import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import { prepareValueRequest } from 'helpers/prepareValueRequest';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { wrapper } from 'store/index';
 import { amountElemPageSelector, searchValueRequestSelector } from 'store/selectors';
 import { updateAmount } from 'store/slice/amountElemPage';
+import { setPlanets } from 'store/slice/planets';
 import { PlanetsRequest } from 'types/interface/api';
 
 import { CardList } from 'components/card-list';
@@ -45,7 +46,6 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
   const result = planetsApi.endpoints.getPlanets.select(queryResponse)(store.getState());
   const { data, error } = result;
   const isError = Boolean(error);
-
   return {
     props: {
       data,
@@ -62,6 +62,12 @@ const MainPage = ({ data, pageParam, isError, children }: MainPageProps) => {
   const amountElem = useAppSelector(amountElemPageSelector);
   const [amountPagPage, setAmountPagPage] = useState(MAX_PAGE_DEFAULT);
   const [errorHard, setErrorHard] = useState(false);
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setPlanets(data.results));
+    }
+  }, [data]);
 
   if (errorHard) {
     throw new Error('There was an error in the fetch request, function getPlanets');

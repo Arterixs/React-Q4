@@ -14,10 +14,12 @@ interface CardListProps {
 
 export const CardList = ({ hasError, planets }: CardListProps) => {
   const router = useRouter();
+  const storePlanets = useAppSelector(planetsSelector);
+  const actualPlanets = planets && planets.length ? planets : storePlanets;
   return (
     <section className={styles.section}>
       <h2>Planets</h2>
-      {getJsxContentOfPlanets(planets, hasError, router.query)}
+      {getJsxContentOfPlanets(actualPlanets, hasError, router.query)}
     </section>
   );
 };

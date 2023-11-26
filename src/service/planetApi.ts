@@ -7,11 +7,11 @@ import { API } from './api';
 export const planetApi = createApi({
   reducerPath: 'planetApi',
   baseQuery: fetchBaseQuery({ baseUrl: API }),
-  // eslint-disable-next-line consistent-return
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
     }
+    return undefined;
   },
   endpoints: (builder) => ({
     getPlanetById: builder.query<Planet, string>({

@@ -11,7 +11,6 @@ const MESSAGE_NOT_FOUND = 'Unfortunately nothing was found for your search';
 const MESSAGE_ERROR = 'Something went wrong. Refresh the page after some time.';
 
 export const getJsxContentOfPlanets = (planets: Planet[] | undefined, hasError: boolean, query: ParsedUrlQuery) => {
-  console.log(query);
   if (planets && planets.length) {
     return (
       <div className={styles.list}>
@@ -26,7 +25,7 @@ export const getJsxContentOfPlanets = (planets: Planet[] | undefined, hasError: 
             },
           };
           return (
-            <Link href={navigateData} key={planet.name}>
+            <Link href={navigateData} key={planet.name} className={styles.link}>
               <Card planet={planet} />
             </Link>
           );
