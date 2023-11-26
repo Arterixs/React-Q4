@@ -5,9 +5,9 @@ import { useRouter } from 'next/router';
 const Home = () => {
   const router = useRouter()
 
-  useEffect(() => {
-    router.push('/frontpage')
-  }, [])
+  // useEffect(() => {
+  //   router.push('/frontpage')
+  // }, [])
   return (
   <Head>
     <title>Planets Star Wars</title>

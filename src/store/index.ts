@@ -1,4 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { createWrapper } from 'next-redux-wrapper';
 import { planetApi } from 'service/planetApi';
 import { planetsApi } from 'service/planetsApi';
 
@@ -21,6 +22,12 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([planetApi.middleware, planetsApi.middleware]),
 });
 
+const makeStore = () => store;
+
 export type RootState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
+
+type MakeStore = ReturnType<typeof makeStore>;
+
+export const wrapper = createWrapper<MakeStore>(makeStore);

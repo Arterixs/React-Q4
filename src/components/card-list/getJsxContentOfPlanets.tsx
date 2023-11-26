@@ -8,7 +8,7 @@ import styles from './style.module.css';
 const MESSAGE_NOT_FOUND = 'Unfortunately nothing was found for your search';
 const MESSAGE_ERROR = 'Something went wrong. Refresh the page after some time.';
 
-export const getJsxContentOfPlanets = (planets: Planet[] | null, hasError: boolean, clickCard: () => void) => {
+export const getJsxContentOfPlanets = (planets: Planet[] | undefined, hasError: boolean, clickCard: () => void) => {
   if (planets && planets.length) {
     return (
       <div className={styles.list}>
@@ -16,7 +16,7 @@ export const getJsxContentOfPlanets = (planets: Planet[] | null, hasError: boole
           const id = getIdCard(planet.url);
           return (
             // <NavLink to={`${id}`} key={planet.name} onClick={clickCard} className={styles.link}>
-              <Card planet={planet} />
+            <Card planet={planet} key={planet.name} />
             // </NavLink>
           );
         })}
