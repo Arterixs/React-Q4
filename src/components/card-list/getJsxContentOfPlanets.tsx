@@ -1,5 +1,6 @@
-import { NavLink } from 'react-router-dom';
-import { getIdCard } from 'pages/main-page/getIdCard';
+import { getIdCard } from 'helpers/getIdCard';
+import Link from 'next/link';
+import { ParsedUrlQuery } from 'querystring';
 import { Planet } from 'types/interface/api';
 
 import { Card } from 'components/card';
@@ -9,16 +10,24 @@ import styles from './style.module.css';
 const MESSAGE_NOT_FOUND = 'Unfortunately nothing was found for your search';
 const MESSAGE_ERROR = 'Something went wrong. Refresh the page after some time.';
 
-export const getJsxContentOfPlanets = (planets: Planet[] | null, hasError: boolean, clickCard: () => void) => {
+export const getJsxContentOfPlanets = (planets: Planet[] | undefined, hasError: boolean, query: ParsedUrlQuery) => {
   if (planets && planets.length) {
     return (
       <div className={styles.list}>
         {planets.map((planet) => {
           const id = getIdCard(planet.url);
+
+          const navigateData = {
+            pathname: `/frontpage/${id}`,
+            query: {
+              ...query,
+              details: id,
+            },
+          };
           return (
-            <NavLink to={`${id}`} key={planet.name} onClick={clickCard} className={styles.link}>
+            <Link href={navigateData} key={planet.name} className={styles.link}>
               <Card planet={planet} />
-            </NavLink>
+            </Link>
           );
         })}
       </div>

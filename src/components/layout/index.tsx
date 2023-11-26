@@ -1,16 +1,18 @@
-import { Outlet } from 'react-router-dom';
+import { ReactNode } from 'react';
 
 import { Footer } from 'components/footer';
 import { Header } from 'components/header';
 
 import styles from './style.module.css';
 
-export const Layout = () => (
+interface LayoutProps {
+  children: ReactNode;
+}
+
+export const Layout = ({ children }: LayoutProps) => (
   <div className={styles.layout}>
     <Header />
-    <main className={styles.main}>
-      <Outlet />
-    </main>
+    <main className={styles.main}>{children}</main>
     <Footer />
   </div>
 );

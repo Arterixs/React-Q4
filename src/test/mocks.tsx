@@ -1,11 +1,10 @@
+import { Component } from 'react';
 import { Provider } from 'react-redux';
-import { HashRouter, Route, Routes } from 'react-router-dom';
-import { App } from 'app/index';
-import { DetailPage } from 'pages/detail-page';
+import ErrorBoundary from 'next/dist/client/components/error-boundary';
 import { store } from 'store/index';
 import { RequestInfo } from 'undici-types';
 
-import { CardList } from 'components/card-list';
+import { Layout } from 'components/layout';
 
 export const MOCK_PLANETS = [
   {
@@ -134,17 +133,10 @@ export const MOCK_PLANET = {
 
 export const FAKE_COMPONENT = () => (
   <Provider store={store}>
-    <App />
+    <Layout>
+      <Component />
+    </Layout>
   </Provider>
-);
-
-export const FAKE_FULL_COMPONENT = () => (
-  <HashRouter>
-    <Routes>
-      <Route path="/" element={<CardList clickCard={() => {}} hasError={false} />} />
-      <Route path=":id" element={<DetailPage />} />
-    </Routes>
-  </HashRouter>
 );
 
 export const mockUrlPlanet = 'https://swapi.dev/api/planets/1';

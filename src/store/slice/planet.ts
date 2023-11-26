@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
 import { Planet } from 'types/interface/api';
 
 interface PlanetState {
@@ -18,6 +19,12 @@ export const planetSlice = createSlice({
     updatePlanetLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
+  },
+  extraReducers: {
+    [HYDRATE]: (state, action) => ({
+      ...state,
+      ...action.payload.subject,
+    }),
   },
 });
 
