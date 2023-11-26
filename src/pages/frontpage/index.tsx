@@ -88,7 +88,6 @@ const MainPage = ({ data, pageParam, isError, children }: MainPageProps) => {
   const handleClickOptions = (event: ChangeEvent<HTMLSelectElement>) => {
     const currentElem = event.target.value;
     const currentPage = pageParam ?? DEFAULT_PAGE;
-    // setSearchParams(getUpdateParams(DEFAULT_PAGE, requestValue));
     requestPlanet(requestValue, dispatch, setErrorHard, setAmountPagPage, currentPage, currentElem);
     dispatch(updateAmount(currentElem));
   };

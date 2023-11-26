@@ -33,6 +33,7 @@ module.exports = {
     },
   },
   rules: {
+    'react-refresh/only-export-components': OFF,
     'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state', 'pageProps'] }],
     'react/destructuring-assignment': OFF,
     'react-hooks/exhaustive-deps': OFF,
@@ -41,12 +42,7 @@ module.exports = {
     'react-refresh/only-export-components': [WARN, { allowConstantExport: true }],
     'react/jsx-no-constructed-context-values': OFF,
     'no-console': [WARN, { allow: ['error'] }],
-    'react/jsx-props-no-spreading': [
-      ERROR,
-      {
-        html: 'ignore',
-      },
-    ],
+    'react/jsx-props-no-spreading': OFF,
     'import/prefer-default-export': OFF,
     'react/function-component-definition': [
       'warn',

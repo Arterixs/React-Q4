@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import { ElementType, useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import type { AppProps } from 'next/app';
