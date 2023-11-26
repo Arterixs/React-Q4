@@ -33,14 +33,14 @@ module.exports = {
     },
   },
   rules: {
-    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
-    "react/destructuring-assignment": OFF,
-    "react-hooks/exhaustive-deps": OFF,
-    "react/no-array-index-key": OFF,
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state', 'pageProps'] }],
+    'react/destructuring-assignment': OFF,
+    'react-hooks/exhaustive-deps': OFF,
+    'react/no-array-index-key': OFF,
     'jsx-quotes': [ERROR, 'prefer-double'],
     'react-refresh/only-export-components': [WARN, { allowConstantExport: true }],
     'react/jsx-no-constructed-context-values': OFF,
-    "no-console": [WARN, { allow: ["error"] }],
+    'no-console': [WARN, { allow: ['error'] }],
     'react/jsx-props-no-spreading': [
       ERROR,
       {
@@ -68,20 +68,20 @@ module.exports = {
         ],
       },
     ],
-    "import/no-extraneous-dependencies": [
+    'import/no-extraneous-dependencies': [
       ERROR,
       {
-        "devDependencies": [
-            "**/setup-test.ts",
-            "test.{ts,tsx,js,jsx}",
-            "test-*.{ts,tsx,js,jsx}",
-            "**/*{.,_}{test,spec}.{ts,tsx,js,jsx}",
-            "**/jest.config.{ts,js}",
-            "**/jest.setup.{ts,js}",
-            "**/*.stories.*",
-            "**/.storybook/**/*.*"
-        ]
-      }
-    ]
+        devDependencies: [
+          '**/setup-test.ts',
+          'test.{ts,tsx,js,jsx}',
+          'test-*.{ts,tsx,js,jsx}',
+          '**/*{.,_}{test,spec}.{ts,tsx,js,jsx}',
+          '**/jest.config.{ts,js}',
+          '**/jest.setup.{ts,js}',
+          '**/*.stories.*',
+          '**/.storybook/**/*.*',
+        ],
+      },
+    ],
   },
 };

@@ -21,13 +21,10 @@ export const planetsSlice = createSlice({
     },
   },
   extraReducers: {
-    [HYDRATE]: (state, action) => {
-      console.log('HYDRATE', state, action.payload);
-      return {
-        ...state,
-        ...action.payload.subject,
-      };
-    },
+    [HYDRATE]: (state, action) => ({
+      ...state,
+      ...action.payload.subject,
+    }),
   },
 });
 

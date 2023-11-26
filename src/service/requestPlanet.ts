@@ -9,7 +9,6 @@ const DEFAULT_ELEM_ON_PAGE = 10;
 export const requestPlanet = async (
   value: string,
   dispatch: AppDispatch,
-  setErrorRequest: ReactState<boolean>,
   setErrorHard: ReactState<boolean>,
   setAmountPagPage: ReactState<number>,
   page = '',
@@ -22,8 +21,6 @@ export const requestPlanet = async (
       const amountPagPage = Math.ceil(resultApi.count / DEFAULT_ELEM_ON_PAGE);
       dispatch(setPlanets(resultApi.results));
       setAmountPagPage(amountPagPage);
-    } else {
-      setErrorRequest(true);
     }
   } catch {
     setErrorHard(true);

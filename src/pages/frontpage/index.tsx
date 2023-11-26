@@ -1,11 +1,7 @@
-/* eslint-disable react/prop-types */
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, ReactNode, useState } from 'react';
 import { prepareValueRequest } from 'helpers/prepareValueRequest';
-import error from 'next/error';
 import Head from 'next/head';
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { getUpdateParams } from 'service/getUpdateParams';
 import { setCurrentRequestInLocal } from 'service/localStorageApi';
 import { getRunningQueriesThunk, planetsApi } from 'service/planetsApi';
 import { requestPlanet } from 'service/requestPlanet';
@@ -29,6 +25,8 @@ const DEFAULT_ELEM_ON_PAGE = 10;
 interface MainPageProps {
   data: PlanetsRequest | undefined;
   pageParam: string;
+  isError: boolean;
+  children: ReactNode;
 }
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async (context) => {
@@ -36,33 +34,34 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async (c
   const prepareSearchParam = typeof searchParam === 'string' ? searchParam : DEFAULT_SEARCH;
   const pageParam = context.query?.page;
   const preparePageParam = typeof pageParam === 'string' ? pageParam : DEFAULT_PAGE;
-  store.dispatch(planetsApi.endpoints.getPlanets.initiate({ page: preparePageParam, namePlanet: prepareSearchParam }));
+
+  const queryResponse = {
+    page: preparePageParam,
+    namePlanet: prepareSearchParam,
+  };
+
+  store.dispatch(planetsApi.endpoints.getPlanets.initiate(queryResponse));
   await Promise.all(store.dispatch(getRunningQueriesThunk()));
-  const result = planetsApi.endpoints.getPlanets.select({ page: preparePageParam, namePlanet: prepareSearchParam })(
-    store.getState()
-  );
-  const { data } = result;
+  const result = planetsApi.endpoints.getPlanets.select(queryResponse)(store.getState());
+  const { data, error } = result;
+  const isError = Boolean(error);
+
   return {
     props: {
       data,
       pageParam: preparePageParam,
+      isError,
     },
   };
 });
 
-const MainPage = ({ data, pageParam }: MainPageProps) => {
+const MainPage = ({ data, pageParam, isError, children }: MainPageProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const requestValue = useAppSelector(searchValueRequestSelector);
   const amountElem = useAppSelector(amountElemPageSelector);
   const [amountPagPage, setAmountPagPage] = useState(MAX_PAGE_DEFAULT);
-  const [errorRequest, setErrorRequest] = useState(false);
   const [errorHard, setErrorHard] = useState(false);
-  const [isShowDetail, setShowDetail] = useState(false);
-
-  // if (isError) {
-  //   setErrorRequest(true);
-  // }
 
   if (errorHard) {
     throw new Error('There was an error in the fetch request, function getPlanets');
@@ -84,7 +83,7 @@ const MainPage = ({ data, pageParam }: MainPageProps) => {
     const currentElem = event.target.value;
     const currentPage = pageParam ?? DEFAULT_PAGE;
     // setSearchParams(getUpdateParams(DEFAULT_PAGE, requestValue));
-    requestPlanet(requestValue, dispatch, setErrorRequest, setErrorHard, setAmountPagPage, currentPage, currentElem);
+    requestPlanet(requestValue, dispatch, setErrorHard, setAmountPagPage, currentPage, currentElem);
     dispatch(updateAmount(currentElem));
   };
 
@@ -99,15 +98,11 @@ const MainPage = ({ data, pageParam }: MainPageProps) => {
     });
   };
 
-  const onShowDetail = () => {
-    setShowDetail(true);
-  };
-
   const amountPageData = data?.count ?? 0;
 
   const amountOptionsPage = Math.ceil(amountPageData / DEFAULT_ELEM_ON_PAGE);
 
-  const isRenderPagination = errorRequest || amountOptionsPage === 1;
+  const isRenderPagination = isError || amountOptionsPage === 1;
   const currentPage = pageParam ? Number(pageParam) : Number(DEFAULT_PAGE);
 
   return (
@@ -125,7 +120,7 @@ const MainPage = ({ data, pageParam }: MainPageProps) => {
           amountElem={amountElem}
           amountPage={amountOptionsPage}
         />
-        <CardList hasError={errorRequest} clickCard={onShowDetail} planets={data?.results} />
+        <CardList hasError={isError} planets={data?.results} />
         {!isRenderPagination && (
           <Pagination
             currentPage={currentPage}
@@ -134,17 +129,7 @@ const MainPage = ({ data, pageParam }: MainPageProps) => {
             key={currentPage}
           />
         )}
-        {/* {isShowDetail && (
-        <Outlet
-          context={{
-            currentPage: pageParam ?? DEFAULT_PAGE,
-            searchParam,
-            setShowDetail,
-            setErrorRequest,
-            setErrorHard,
-          }}
-        />
-      )} */}
+        {children}
       </section>
     </>
   );
